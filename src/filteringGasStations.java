@@ -207,7 +207,6 @@ public class filteringGasStations {
             e.printStackTrace();
         }
 
-
         System.out.println("*** END ***");
     }
 }
