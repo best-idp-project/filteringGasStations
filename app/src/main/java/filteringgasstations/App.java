@@ -94,6 +94,9 @@ public class App {
             FileWriter fw = new FileWriter(file);
 
             for (CountryCode country : CountryCode.values()) {
+                if (country == CountryCode.GER) {
+                    continue;
+                }
                 String countryName = country.getName();
                 List<GasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
 
