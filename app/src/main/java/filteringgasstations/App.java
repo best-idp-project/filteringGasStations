@@ -4,15 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class App {
-    public static final int RANGE_KM = 30;
+    public static final int RANGE_KM = 50;
 
     static HashMap<CountryCode, List<GasStation>> allStations = new HashMap<>();
 
@@ -26,19 +23,56 @@ public class App {
             assert file != null;
             JsonReader reader = new JsonReader(new FileReader(file.getPath()));
             List<List<Double>> parsedPoints = gson.fromJson(reader, BORDER_TYPE);
-            points = parsedPoints.stream()
-                    .filter(array -> array.size() == 2)
-                    .map(array -> {
-                        var longitude = array.get(0);
-                        var latitude = array.get(1);
-                        return new BorderPoint(latitude, longitude);
-                    })
-                    .toList();
+            points = parsedPoints.stream().filter(array -> array.size() == 2).map(array -> {
+                var longitude = array.get(0);
+                var latitude = array.get(1);
+                return new BorderPoint(latitude, longitude);
+            }).toList();
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("German Borders has " + points.size() + " points");
         return points;
+    }
+
+    public static List<GasStation> readCSV(String country) {
+        var file = ClassLoader.getSystemClassLoader().getResource("csv/" + country + "_gas_stations.csv");
+        if (file == null) {
+            return Collections.emptyList();
+        }
+        return Utils.readFile(file.getPath()).stream().filter(Objects::nonNull).map(line -> line.split("\t")).filter(line -> Arrays.stream(line).allMatch(column -> {
+            try {
+                Double.parseDouble(column);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        })).map(line -> {
+            var id = Long.parseLong(line[0]);
+            var latitude = Double.parseDouble(line[1]);
+            var longitude = Double.parseDouble(line[2]);
+            return new GasStation(id, latitude, longitude);
+        }).toList();
+    }
+
+    public static List<OverpassGasStation> readJSON(String country) {
+        Type OVERPASS_TYPE = new TypeToken<Overpass>() {
+        }.getType();
+        var file = ClassLoader.getSystemClassLoader().getResource("json/" + country + "_gas_stations.json");
+        if (file == null) {
+            return Collections.emptyList();
+        }
+        Gson gson = new Gson();
+        try {
+
+            JsonReader reader = new JsonReader(new FileReader(file.getPath()));
+            Overpass data = gson.fromJson(reader, OVERPASS_TYPE);
+            var not_node = Arrays.stream(data.elements).filter(n -> !n.type.equals("node")).toList();
+            return Arrays.stream(data.elements).filter(n -> n.type.equals("node")).toList();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
     public static void main(String[] args) {
@@ -50,28 +84,15 @@ public class App {
                 continue;
             }
             String countryName = countryCode.getName();
-            List<GasStation> stations = new ArrayList<>();
-            var file = ClassLoader.getSystemClassLoader().getResource(countryName.toLowerCase() + "_gas_stations.csv");
-            if (file != null) {
-                stations = Utils.readFile(file.getPath())
-                        .stream()
-                        .filter(Objects::nonNull)
-                        .map(line -> line.split("\t"))
-                        .filter(line -> Arrays.stream(line).allMatch(column -> {
-                            try {
-                                Double.parseDouble(column);
-                                return true;
-                            } catch (NumberFormatException e) {
-                                return false;
-                            }
-                        }))
-                        .map(line -> {
-                            var id = line[0];
-                            var latitude = Double.parseDouble(line[1]);
-                            var longitude = Double.parseDouble(line[2]);
-                            return new GasStation(latitude, longitude);
-                        }).toList();
+            var csvStations = readCSV(countryName.toLowerCase());
+            var jsonStations = readJSON(countryName.toLowerCase());
+            List<GasStation> stations = new ArrayList<>(jsonStations);
+            if (jsonStations.size() != csvStations.size()) {
+                System.out.println("JSON(" + jsonStations.size() + ") and CSV(" + csvStations.size() + ") data not of equal size. -.-");
             }
+            stations.addAll(csvStations);
+            stations = stations.stream().distinct().toList();
+
             allStations.put(countryCode, stations);
 
             System.out.println(countryName + " has " + stations.size() + " gas stations \n");
@@ -88,7 +109,7 @@ public class App {
         }
 
         try {
-            String filename = s1.concat(String.valueOf(RANGE_KM)).concat(".txt");
+            String filename = s1.concat(String.valueOf(RANGE_KM)).concat(".csv");
             file = new File(filename);
 
             FileWriter fw = new FileWriter(file);
@@ -106,14 +127,14 @@ public class App {
                             //System.out.println("Country " + countryName + " one inside range");
                             // write the resulting stations in a separate file
                             //fw.append(country.getKey() + " Lat: " + g.lat + " Lon: " + g.lon + " \n");
-                            fw.append(String.valueOf(g.lon)).append(",").append(String.valueOf(g.lat)).append("\n");
+                            fw.append(g.toString()).append("\n");
                             counterFound++;
                             found = true;
                         }
                     }
                     found = false;
                 }
-                System.out.println("Country " + countryName + ": " + counterFound + " gas stations inside 30km");
+                System.out.println("Country " + countryName + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
                 counterFound = 0;
             }
             fw.close();
