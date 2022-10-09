@@ -4,11 +4,13 @@ public class GasStation {
     final long id;
     final double lat;
     final double lon;
+    GasStationAddress addr;
 
-    public GasStation(long id, double latitude, double longitude) {
+    public GasStation(long id, double latitude, double longitude, GasStationAddress address) {
         this.id = id;
         lat = latitude;
         lon = longitude;
+        addr = address;
     }
 
     @Override
@@ -27,7 +29,11 @@ public class GasStation {
 
     @Override
     public String toString() {
-        return id + "," + lat + "," + lon;
+        return "{id=" + id +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                "," + addr +
+                '}';
     }
 
     @Override

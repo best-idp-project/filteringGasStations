@@ -1,7 +1,5 @@
 package filteringgasstations;
 
-import filteringgasstations.GasStation;
-
 import java.util.HashMap;
 
 public class OverpassGasStation extends GasStation {
@@ -9,12 +7,11 @@ public class OverpassGasStation extends GasStation {
     public String type;
     HashMap<String, String> tags;
 
-    @Override
-    public String toString() {
-        return id + "," + lat + "," + lon + ',' + tags;
+    public void addImportantFields() {
+        this.addr = new GasStationAddress(tags.get("addr:country"), tags.get("addr:city"), tags.get("addr::street"), tags.get("addr::housenumber"), tags.get("addr:postcode"), tags.get("name"));
     }
 
-    public OverpassGasStation(long id, double latitude, double longitude) {
-        super(id, latitude, longitude);
+    public OverpassGasStation(long id, double latitude, double longitude, GasStationAddress addr) {
+        super(id, latitude, longitude, addr);
     }
 }
