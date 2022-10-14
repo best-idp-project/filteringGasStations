@@ -3,9 +3,9 @@ package filteringgasstations;
 public class GasStationPair {
     String idFirstStation;
     String idSecondStation;
-    Double airDistance;
-    Double drivingDistance;
-    Double drivingTime;
+    Double airDistance; // meters
+    Double drivingDistance; // meters
+    Double drivingTime; // seconds
 
     public GasStationPair(String idFirstStation, String idSecondStation, Double airDistance) {
         this.idFirstStation = idFirstStation;
@@ -15,13 +15,11 @@ public class GasStationPair {
 
     @Override
     public String toString() {
-        return "GasStationPair{" +
-                "idFirstStation='" + idFirstStation + '\'' +
-                ", idSecondStation='" + idSecondStation + '\'' +
-                ", airDistance=" + airDistance +
-                ", drivingDistance=" + drivingDistance +
-                ", drivingTime=" + drivingTime +
-                '}';
+        return "\"" + idFirstStation + "\"," +
+                "\"" + idSecondStation + "\"," +
+                airDistance + "," +
+                drivingDistance + "," +
+                drivingTime;
     }
 
     public Double getDrivingDistance() {
