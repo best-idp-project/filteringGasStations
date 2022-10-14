@@ -20,6 +20,7 @@ dependencies {
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.0.1-jre")
     implementation("com.google.code.gson:gson:2.9.1")
+    implementation("com.opencsv:opencsv:5.7.0")
 }
 
 application {

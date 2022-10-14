@@ -21,11 +21,11 @@ public class GasStationAddress {
     @Override
     public String toString() {
         return
-                " country='" + country + '\'' +
-                        ", city='" + city + '\'' +
-                        ", street='" + street + '\'' +
-                        ", housenumber='" + housenumber + '\'' +
-                        ", postcode='" + postcode + '\'' +
-                        ", name='" + name + '\'';
+                country + ","
+                        + city + "," +
+                        street + "," +
+                        housenumber + "," +
+                        postcode + "," +
+                        name;
     }
 }

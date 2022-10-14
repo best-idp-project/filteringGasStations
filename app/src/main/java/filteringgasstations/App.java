@@ -3,23 +3,30 @@ package filteringgasstations;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.opencsv.CSVReader;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import static filteringgasstations.Utils.distance;
+
+
 public class App {
-    public static final int RANGE_KM = 50; // select the range
+    public static final int RANGE_KM = 20; // select the range
     public static final String format = "csv"; // select csv or json
 
     static HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
+    static List<OverpassGasStation> allStationsIn20KmBorder = new ArrayList<>();
+    static List<GasStationPair> allPairsIn10Km = new ArrayList<>();
 
     public static void main(String[] args) {
         List<BorderPoint> germanBorders = readGermanBorder();
 
-        // Read all countries' gas stations
+        //Read all countries' gas stations
         System.out.println("HOW MANY GAS STATIONS PER COUNTRY");
         readGasStationsForEachCountry();
+        readGermanStations();
 
         // For every country, check for every gas station the distance to all points of the german border
         String s1 = "output/gasStationsRange";
@@ -29,6 +36,9 @@ public class App {
             gasStationsInRangeCSV(germanBorders, s1);
         else
             gasStationsInRangeJSON(germanBorders, s1);
+
+        System.out.println("\nEVALUATING DISTANCES BETWEEN STATIONS");
+        evaluateDistancesBetweenStations();
 
         System.out.println("*** END ***");
     }
@@ -89,19 +99,16 @@ public class App {
             Gson gson = new Gson();
             FileWriter fwjson = new FileWriter(filejson);
 
-            List<GasStation> stationsInsideRange = new ArrayList<>();
-
             for (CountryCode country : CountryCode.values()) {
-                if (country == CountryCode.GER) {
-                    continue;
-                }
+
                 String countryName = country.getName();
                 List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
 
-                for (GasStation g : countryGasList) {
+                for (OverpassGasStation g : countryGasList) {
                     for (BorderPoint b : germanBorders) {
-                        if ((Utils.distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
-                            stationsInsideRange.add(g);
+                        if ((distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
+                            allStationsIn20KmBorder.add(g);
+
                             counterFound++;
                             found = true;
                         }
@@ -111,7 +118,7 @@ public class App {
                 System.out.println("Country " + countryName + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
                 counterFound = 0;
             }
-            gson.toJson(stationsInsideRange, fwjson);
+            gson.toJson(allStationsIn20KmBorder, fwjson);
             fwjson.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,18 +138,18 @@ public class App {
             String filenamecsv = s1.concat(String.valueOf(RANGE_KM)).concat(".csv");
             filecsv = new File(filenamecsv);
             FileWriter fwcsv = new FileWriter(filecsv);
+            fwcsv.append("id,lat,lon,country,city,street,housenumber,postcode,name\n");
 
             for (CountryCode country : CountryCode.values()) {
-                if (country == CountryCode.GER) {
-                    continue;
-                }
+
                 String countryName = country.getName();
                 List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
 
-                for (GasStation g : countryGasList) {
+                for (OverpassGasStation g : countryGasList) {
                     for (BorderPoint b : germanBorders) {
-                        if ((Utils.distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
+                        if ((distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
                             fwcsv.append(g.toString()).append("\n");
+                            allStationsIn20KmBorder.add(g);
                             counterFound++;
                             found = true;
                         }
@@ -173,5 +180,49 @@ public class App {
 
             System.out.println(countryName + " has " + stations.size() + " gas stations");
         }
+    }
+
+    public static void readGermanStations() {
+        List<OverpassGasStation> germanStations = new ArrayList<>();
+        var file = ClassLoader.getSystemClassLoader().getResource("stations_germany.csv");
+
+        try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
+            String[] lineInArray;
+            reader.readNext();  // skip the header
+            while ((lineInArray = reader.readNext()) != null) {
+                GasStationAddress address = new GasStationAddress("DE", lineInArray[6], lineInArray[3], lineInArray[4], lineInArray[5], lineInArray[1]);
+                OverpassGasStation station = new OverpassGasStation(lineInArray[0], Double.parseDouble(lineInArray[7]), Double.parseDouble(lineInArray[8]), address);
+                germanStations.add(station);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        allStations.put(CountryCode.valueOf("GER"), germanStations);
+
+        System.out.println("Germany has " + germanStations.size() + " gas stations");
+
+    }
+
+    public static void evaluateDistancesBetweenStations() {
+        // this implementation to avoid that the same pair evaluated twice
+        for (int i = 0; i < allStationsIn20KmBorder.size(); i++) {
+            for (int j = i + 1; j < allStationsIn20KmBorder.size(); j++) {
+                OverpassGasStation first = allStationsIn20KmBorder.get(i);
+                OverpassGasStation second = allStationsIn20KmBorder.get(j);
+                // at least one of the two should be a german station, pairs between foreign stations are not interesting
+                if (!Objects.equals(first.addr.country, "DE") && !Objects.equals(second.addr.country, "DE"))
+                    continue;
+
+                double airDistance = distance(first.lat, second.lat, first.lon, second.lon);
+                if (airDistance <= 10) {
+                    GasStationPair pair = new GasStationPair(first.id, second.id, airDistance);
+                    assert (((first.addr.country != null) && (first.addr.country.equals("DE"))) ||
+                            ((second.addr.country != null) && second.addr.country.equals("DE")));
+                    allPairsIn10Km.add(pair);
+                }
+            }
+        }
+        System.out.println("There are " + allPairsIn10Km.size() + " pairs with air distance <= 10 km");
+
     }
 }

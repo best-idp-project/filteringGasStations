@@ -1,12 +1,12 @@
 package filteringgasstations;
 
 public class GasStation {
-    final long id;
+    final String id;
     final double lat;
     final double lon;
     GasStationAddress addr;
 
-    public GasStation(long id, double latitude, double longitude, GasStationAddress address) {
+    public GasStation(String id, double latitude, double longitude, GasStationAddress address) {
         this.id = id;
         lat = latitude;
         lon = longitude;
@@ -29,11 +29,10 @@ public class GasStation {
 
     @Override
     public String toString() {
-        return "{id=" + id +
-                ", lat=" + lat +
-                ", lon=" + lon +
-                "," + addr +
-                '}';
+        return id +
+                "," + lat +
+                "," + lon +
+                "," + addr;
     }
 
     @Override
