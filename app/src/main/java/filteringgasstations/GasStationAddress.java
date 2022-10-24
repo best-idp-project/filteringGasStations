@@ -18,6 +18,14 @@ public class GasStationAddress {
         this.name = name;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @Override
     public String toString() {
         return

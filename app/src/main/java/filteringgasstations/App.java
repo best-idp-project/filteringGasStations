@@ -156,6 +156,8 @@ public class App {
                 List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
 
                 for (OverpassGasStation g : countryGasList) {
+                    if (g.getAddr().getCountry() == null)
+                        g.getAddr().setCountry(country.toString());
                     for (BorderPoint b : germanBorders) {
                         if ((distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
                             fwcsv.append(g.toString()).append("\n");

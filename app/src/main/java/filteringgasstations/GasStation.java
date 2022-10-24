@@ -13,6 +13,10 @@ public class GasStation {
         addr = address;
     }
 
+    public GasStationAddress getAddr() {
+        return addr;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
