@@ -18,7 +18,7 @@ import static filteringgasstations.Utils.distance;
 
 public class App {
     public static final int RANGE_KM = 20; // select the range
-    public static final String format = "csv"; // select csv or json
+    public static final String FORMAT = "csv"; // select csv or json
 
     static HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
     static List<OverpassGasStation> allStationsIn20KmBorder = new ArrayList<>();
@@ -39,7 +39,7 @@ public class App {
         String s1 = "output/gasStationsRange";
 
         System.out.println("\nHOW MANY GAS STATIONS INSIDE RANGE");
-        if (format.equals("csv"))
+        if (FORMAT.equals("csv"))
             gasStationsInRangeCSV(germanBorders, s1);
         else
             gasStationsInRangeJSON(germanBorders, s1);
@@ -78,7 +78,7 @@ public class App {
     public static List<OverpassGasStation> readJSON(String country) {
         Type OVERPASS_TYPE = new TypeToken<Overpass>() {
         }.getType();
-        var file = ClassLoader.getSystemClassLoader().getResource("json/" + country + "_gas_stations.json");
+        var file = ClassLoader.getSystemClassLoader().getResource("json/" + country + ".json");
         if (file == null) {
             return Collections.emptyList();
         }
@@ -111,21 +111,19 @@ public class App {
 
             for (CountryCode country : CountryCode.values()) {
 
-                String countryName = country.getName();
                 List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
 
                 for (OverpassGasStation g : countryGasList) {
                     for (BorderPoint b : germanBorders) {
                         if ((distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
                             allStationsIn20KmBorder.add(g);
-
                             counterFound++;
                             found = true;
                         }
                     }
                     found = false;
                 }
-                System.out.println("Country " + countryName + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
+                System.out.println(country.getName() + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
                 counterFound = 0;
             }
             gson.toJson(allStationsIn20KmBorder, fwjson);
@@ -151,8 +149,6 @@ public class App {
             fwcsv.append("id,lat,lon,country,city,street,housenumber,postcode,name\n");
 
             for (CountryCode country : CountryCode.values()) {
-
-                String countryName = country.getName();
                 List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
 
                 for (OverpassGasStation g : countryGasList) {
@@ -168,7 +164,7 @@ public class App {
                     }
                     found = false;
                 }
-                System.out.println("Country " + countryName + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
+                System.out.println(country.getName() + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
                 counterFound = 0;
             }
             fwcsv.close();
@@ -182,15 +178,14 @@ public class App {
             if (countryCode == CountryCode.GER) {
                 continue;
             }
-            String countryName = countryCode.getName();
-            var jsonStations = readJSON(countryName.toLowerCase());
+            var jsonStations = readJSON(countryCode.getCode());
             List<OverpassGasStation> stations = new ArrayList<>(jsonStations);
             stations.forEach(OverpassGasStation::addImportantFields);
             stations = stations.stream().distinct().toList();
 
             allStations.put(countryCode, stations);
 
-            System.out.println(countryName + " has " + stations.size() + " gas stations");
+            System.out.println(countryCode.getName() + " has " + stations.size() + " gas stations");
         }
     }
 
@@ -198,20 +193,23 @@ public class App {
         List<OverpassGasStation> germanStations = new ArrayList<>();
         var file = ClassLoader.getSystemClassLoader().getResource("stations_germany.csv");
 
-        try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
-            String[] lineInArray;
-            reader.readNext();  // skip the header
-            while ((lineInArray = reader.readNext()) != null) {
-                GasStationAddress address = new GasStationAddress("DE", lineInArray[6], lineInArray[3],
-                        lineInArray[4], lineInArray[5], lineInArray[1]);
-                OverpassGasStation station = new OverpassGasStation(lineInArray[0], Double.parseDouble(lineInArray[7]),
-                        Double.parseDouble(lineInArray[8]), address);
-                germanStations.add(station);
+        try {
+            assert file != null;
+            try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
+                String[] lineInArray;
+                reader.readNext();  // skip the header
+                while ((lineInArray = reader.readNext()) != null) {
+                    GasStationAddress address = new GasStationAddress("DE", lineInArray[6], lineInArray[3],
+                            lineInArray[4], lineInArray[5], lineInArray[1]);
+                    OverpassGasStation station = new OverpassGasStation(lineInArray[0], Double.parseDouble(lineInArray[7]),
+                            Double.parseDouble(lineInArray[8]), address);
+                    germanStations.add(station);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        allStations.put(CountryCode.valueOf("GER"), germanStations);
+        allStations.put(CountryCode.GER, germanStations);
 
         System.out.println("Germany has " + germanStations.size() + " gas stations");
 
@@ -233,6 +231,7 @@ public class App {
                     counter++;
                     GasStationPair pair = new GasStationPair(first.id, second.id, airDistance * 1000);
                     System.out.println("http req #: " + counter + "/45610");
+                    getRoute(first, second);
                     httpRequestDrivingTimeAndDistances(first, second, pair);
                     assert (((first.addr.country != null) && (first.addr.country.equals("DE"))) ||
                             ((second.addr.country != null) && second.addr.country.equals("DE")));
@@ -241,7 +240,6 @@ public class App {
             }
         }
         System.out.println("\nThere are " + allPairsIn10Km.size() + " pairs with air distance <= 10 km\n");
-
     }
 
     public static void httpRequestDrivingTimeAndDistances(OverpassGasStation first, OverpassGasStation second, GasStationPair pair) {

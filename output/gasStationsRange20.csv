@@ -1419,7 +1419,7 @@ e1a15081-260a-9107-e040-0b0a3dfe563c,53.749895,9.660104,DE,Elmshorn,Berliner Str
 b3e09459-40ac-419b-b525-7482e0bdb2f3,48.668448,7.945497,DE,Rheinau-Freistett,Hauptstr. ,84,77866,Freistett
 39970813-1806-43fc-a680-a826640b5c5f,54.7544,9.760945,DE,Steinbergkirche,Nordstr,4,24972,Sb Steinbergkirche Nordstr 4
 39a40b36-d952-4e28-964f-32c267d4cf10,49.05651,8.383517,DE,Karlsruhe,Grabener Str. ,11,76149,T Karlsruhe
-39ac990b-5e88-49c2-8c14-fcb4b0c70251,47.763271,7.578751,DE,Schliengen,Am Sonnenst�?ueck ,13,79418,bft Tankstelle Autohaus Roll GmbH
+39ac990b-5e88-49c2-8c14-fcb4b0c70251,47.763271,7.578751,DE,Schliengen,Am Sonnenstueck ,13,79418,bft Tankstelle Autohaus Roll GmbH
 ed758ce3-beab-4872-a542-663d5d2e4205,49.30373,12.8293076,DE,Furth,Chamer Straße,6,93437,Aral Tankstelle
 39e3bcba-c1aa-4bac-84fc-fa2f38130f1b,49.269394,7.136992,DE,St. Ingbert,Südstr.,64,66386,Shell St. Ingbert Südstr. 64
 023c4d55-1bef-4413-b969-549b3f7e98d9,54.22942352295,12.57791233063,DE,Ahrenshagen,Hauptstr.,4,18320,Ahrenshagen
@@ -2252,7 +2252,7 @@ f092ab8f-97d3-4146-9c0e-022ffdfecfb9,51.29462,6.25741,DE,Nettetal,Duelkener Str.
 1af065fe-45b0-4038-b6cb-397e35d5ebf4,51.853187,14.406464,DE,Peitz,Cottbuser Str.,12A,03185,TotalEnergies Peitz
 1b008ee6-78ea-4485-ab1d-7212a393b471,51.17863,14.45308,DE,Bautzen,Löbauer Straße,65,02625,Aral Tankstelle
 1b098715-0f1b-494c-9baa-0f7f98f94e64,49.281409,6.882635,DE,Püttlingen,Bahnhofstr.,76,66346,Shell Püttlingen Bahnhofstr. 76
-5f252581-6921-46a0-9ae2-1581ff5cf6f1,48.778397,13.437696,DE,Perlesreut,Kaltenaecker ,21,94157,Fue�?rst
+5f252581-6921-46a0-9ae2-1581ff5cf6f1,48.778397,13.437696,DE,Perlesreut,Kaltenaecker ,21,94157,Fuerst
 5f2ffc28-172d-4656-8ae5-6493a28a35d5,53.478085,9.705485,DE,Buxtehude,Harburger Str.,13,21614,Shell Buxtehude Harburger Str. 13
 1b321eb8-f553-47d6-9f80-70c60647a98e,53.921235,10.697596,DE,Bad Schwartau,Eutiner Str.,4a,23611,Shell Bad Schwartau Eutiner Str. 4a
 1b46d07e-8343-4864-a1c7-5f062d92ebab,51.320233,6.271307,DE,Nettetal,Wevelinghoven ,14,41334,Tank-&Waschhof Timmermanns
@@ -3157,7 +3157,7 @@ fce6e1be-59e4-4c14-96a6-7feb95b8cbc3,53.92171,9.512394,DE,Itzehoe,Adenauer Allee
 0738d58f-63db-4b35-8c77-3d8a062f115e,47.99183,7.789029,DE,Freiburg im Breisgau,Bötzinger Straße,19,79111,Aral Tankstelle
 ad5796bf-27fe-467d-828f-31d940da21f6,51.8799,6.9205,DE,Velen-Ramsdorf,Südring,20 - 26,46342,Raiffeisen Hohe Mark Hamaland eG
 c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kuferstraße,9a,25541,Schillhorn-Brunsbüttel
-21650201,47.5852728,12.6972646,AUT,null,null,null,null,Shell
+21650201,47.5850672,12.6973063,AUT,null,null,null,null,Shell
 27260497,47.444833,12.2335576,AUT,null,null,null,null,BP
 27288970,47.5019449,12.0835275,AUT,null,null,null,null,Gutmann
 34017419,47.5834682,13.15647,AUT,null,null,null,null,Eni
@@ -3185,7 +3185,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 253239505,47.2618799,11.2644568,AT,Kematen in Tirol,null,null,6175,Gutmann
 253377519,47.3254322,11.1895331,AUT,null,null,null,null,Shell
 253854774,47.5665172,12.1564549,AUT,null,null,null,null,Eni
-256169298,47.81305,13.0694165,AUT,null,null,null,null,null
+256169298,47.81305,13.0694165,AUT,null,null,null,null,OMV
 256300817,47.2690698,10.9397211,AUT,null,null,null,null,eni
 265980060,47.6472391,12.4045535,AUT,Schwendt,null,null,6385,Bellinger
 266072736,47.8108735,13.0428037,AUT,null,null,null,null,Shell 24h
@@ -3225,7 +3225,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 329205089,47.429786,12.8425375,AUT,null,null,null,null,Jet
 329991124,47.3980307,9.8536471,AT,Andelsbuch,null,null,6866,Eni
 330029050,47.5840214,13.1574137,AUT,null,null,null,null,OMV
-339236086,47.6798363,13.1044151,AUT,null,null,null,null,null
+339236086,47.6798439,13.1044693,AUT,null,null,null,null,null
 339236094,47.6822529,13.1004639,AT,Hallein,null,null,5400,Turmöl
 349198888,47.3099251,11.0615511,AUT,null,null,null,null,Disc
 357999663,47.5891657,12.1744214,AT,Kufstein,null,null,6330,OMV
@@ -3331,7 +3331,6 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 1717617446,48.4087498,13.5217838,AUT,null,null,null,null,null
 1721466887,47.8169337,13.2280068,AUT,null,null,null,null,Shell
 1723249085,47.4262439,12.8399716,AUT,null,null,null,null,Eni
-1731853063,47.7392478,13.0832874,AT,Puch bei Hallein,null,null,5412,AP
 1862879620,48.1787659,13.05086,AUT,null,null,null,null,Turmöl
 1894949660,47.4776613,12.0454346,AT,Wörgl,null,null,6300,Gutmann ENI
 1914161299,48.2439415,13.0488778,AT,Braunau am Inn,null,null,5280,Hofer Diskont
@@ -3361,7 +3360,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 3041510643,47.4392311,12.7647135,AUT,null,null,null,null,Lagerhaus Tankstelle
 3240807057,47.2608037,11.4210869,AT,null,null,null,6020,BP
 3245145530,48.4443445,13.9388289,AUT,null,null,null,null,Tankstelle
-3334249100,47.81733,12.98016,AUT,null,null,null,null,�?С - 24 Wals
+3334249100,47.81733,12.98016,AUT,null,null,null,null,АС - 24 Wals
 3334249803,47.4541,9.75495,AUT,null,null,null,null,OMV
 3359725842,47.9362286,13.0837909,AUT,null,null,null,null,null
 3418267855,47.3530092,9.6348381,AT,Altach,null,null,6844,Eni
@@ -3415,6 +3414,9 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 9375816877,47.4365615,10.7661737,AT,Heiterwang,null,null,6611,BP Heiterwang Süd
 9418380368,48.413151,13.6010128,AUT,null,null,null,null,null
 9547576001,47.488731,12.3758465,AUT,null,null,null,null,HWK
+9977454631,47.4195726,9.6592098,AT,Lustenau,null,null,6890,Jet Tankstelle
+9977454658,47.4200495,9.6587246,AT,Lustenau,null,null,6890,OMV
+9998592840,47.739242,13.0833492,AT,Puch bei Hallein,null,null,5412,AP
 32523952,50.9567908,5.6941081,BEL,Maasmechelen,null,null,3630,Total
 94101806,50.8927833,5.6743463,BEL,null,null,null,null,Esso Smeermaas
 276470806,50.7540493,5.9650809,BEL,null,null,null,null,null
@@ -3577,7 +3579,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 325704584,50.9624518,14.3752319,CZE,null,null,null,null,Herst
 343511279,50.9288616,14.559972,CZE,null,null,null,null,Petrol
 343627336,48.9351044,13.7656372,CZE,Lenora,null,null,38451,Benzina - Nová Houžná
-357139558,50.7702197,14.1984999,CZE,null,null,null,null,Prim Dě�?ín
+357139558,50.7702197,14.1984999,CZE,null,null,null,null,Prim Děčín
 359683376,50.4848752,13.0250888,CZE,null,null,null,null,Pasoil
 385700274,50.7943785,14.8540677,CZE,null,null,null,null,RoBiN OIL Jítrava
 385734769,50.8172105,14.9507229,CZE,null,null,null,null,MOL, Chrastava
@@ -3592,10 +3594,10 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 406610113,50.6494368,14.0041347,CZE,null,null,null,null,null
 408752380,49.4281236,12.9465607,CZE,null,null,null,null,Fronk
 409760785,49.4392555,12.825195,CZE,null,null,null,null,Čerchovka
-409760786,49.4389123,12.8290113,CZE,null,null,null,null,Benzina Klen�?í pod Čerchovem
+409760786,49.4389123,12.8290113,CZE,null,null,null,null,Benzina Klenčí pod Čerchovem
 410925833,49.0584633,13.7847926,CZE,Vimperk,null,null,385 01,RoBiN OIL Vimperk
 428881963,50.3864881,13.1644442,CZE,null,null,null,null,null
-443352837,50.7986819,14.2380024,CZE,Dě�?ín,null,null,40502,MOL, Dě�?ín
+443352837,50.7986819,14.2380024,CZE,Děčín,null,null,40502,MOL, Děčín
 444558788,50.7841178,14.3618832,CZE,null,null,null,null,RoBiN OIL Markvartice
 532077140,50.2209827,12.1906883,CZE,null,null,null,null,Free1 GAS Aš Q1
 536071318,50.5863701,13.5602222,CZE,null,null,null,null,G.A.S. Petroleum Litvínov
@@ -3610,17 +3612,17 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 748343959,50.358751,12.7897408,CZE,null,null,null,null,Free1 GAS Pernink
 772957926,50.3502911,12.4751007,CZE,null,null,null,null,Free1 GAS Kraslice CZK
 772957931,50.3523308,12.4712495,CZE,null,null,null,null,Free1 GAS Kraslice
-818924400,50.7975941,14.4045673,CZE,null,null,null,null,Benzina - Česká Kamenice, Dě�?ínská
+818924400,50.7975941,14.4045673,CZE,null,null,null,null,Benzina - Česká Kamenice, Děčínská
 842666635,50.7752173,14.7709508,CZE,null,null,null,null,Benzina Jablonné v Podještědí
 847692779,49.9645823,12.6941655,CZE,null,null,null,null,MOL
 872576530,49.6654164,12.5461056,CZE,null,null,null,null,ArmEx Rozvadov
 872576536,49.6555916,12.5259319,CZE,null,null,null,null,Free1 GAS Rozvadov
 876498806,50.3856749,13.260146,CZE,null,null,null,null,Shell
 897877343,50.3627945,12.9274231,CZE,null,null,null,null,Pasoil
-899485003,50.4294218,12.7358109,CZE,null,null,null,null,Free1 GAS Potů�?ky
+899485003,50.4294218,12.7358109,CZE,null,null,null,null,Free1 GAS Potůčky
 924010059,49.95244,12.70303,CZE,null,null,null,null,OMV
 924010061,49.9500488,12.7043401,CZE,null,null,null,null,null
-924010064,49.9574828,12.666273,CZE,null,null,null,null,ArmEx Velká Hle�?sebe
+924010064,49.9574828,12.666273,CZE,null,null,null,null,ArmEx Velká Hleďsebe
 953099860,50.7221817,14.7064468,CZE,null,null,null,null,null
 976473565,50.2363738,12.8983079,CZE,null,null,null,null,MOL
 978023887,50.8386618,15.0411125,CZE,null,null,null,null,null
@@ -3637,7 +3639,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 1481092970,50.7753879,15.0618021,CZE,null,null,null,null,EuroOil Liberec
 1500973806,48.9018134,13.7196841,CZ,Strážný,null,null,384 43,MOL
 1532816530,48.9126363,13.7639374,CZE,Strážný,null,null,38443,ONO
-1578330923,50.659047,14.0556563,CZE,null,null,null,null,MOL, Ústí nad Labem, Dě�?ínská
+1578330923,50.659047,14.0556563,CZE,null,null,null,null,MOL, Ústí nad Labem, Děčínská
 1632946783,50.918168,14.6064036,CZE,null,null,null,null,Koloc Oil Varnsdorf
 1710230183,50.611244,13.7381896,CZE,null,null,null,null,PASOIL
 1710256098,50.6110044,13.7507809,CZE,null,null,null,null,EuroOil Duchcov
@@ -3663,22 +3665,22 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 2184142612,50.6657691,14.0656962,CZE,null,null,null,null,Benzina, Ústí nad Labem, Neštěmická
 2184437361,50.6795505,14.0249092,CZE,null,null,null,null,Shell
 2291746460,50.7448,15.0522655,CZE,null,null,null,null,Bonett Liberec (Liad)
-2292756574,50.7717397,14.2066675,CZ,Dě�?ín,null,null,40502,Shell
+2292756574,50.7717397,14.2066675,CZ,Děčín,null,null,40502,Shell
 2296951971,50.7615174,14.0987649,CZE,null,null,null,null,Vendys & V Modrá
 2304976664,50.9131279,15.062764,CZE,null,null,null,null,Benzínová pumpa Silkom
 2304976683,50.9158708,15.061675,CZE,null,null,null,null,Benzina - Frýdlant V Čechách
 2304976684,50.9193821,15.0795694,CZE,null,null,null,null,Silkom
-2305592296,50.777423,14.2273391,CZE,null,null,null,null,EuroOil Dě�?ín 2, Benešovská
+2305592296,50.777423,14.2273391,CZE,null,null,null,null,EuroOil Děčín 2, Benešovská
 2309848937,49.8969219,12.5572667,CZE,null,null,null,null,null
 2327734589,50.5453707,13.7715286,CZE,null,null,null,null,MOL, Bílina
 2364427249,50.6611502,14.0468028,CZE,null,null,null,null,Benzina, Ústí nad Labem, Předmostí
-2367592927,50.7697931,14.2081062,CZE,null,null,null,null,Tesco Dě�?ín
+2367592927,50.7697931,14.2081062,CZE,null,null,null,null,Tesco Děčín
 2374717604,50.5110872,13.6531029,CZE,null,null,null,null,Tesco Most
 2374739165,50.5163278,13.6398973,CZE,null,null,null,null,Shell
 2379327158,50.4914596,13.6361792,CZE,null,null,null,null,Autoplus II
 2385088803,50.9105584,14.6128238,CZE,null,null,null,null,null
 2385492397,50.6781967,14.6540031,CZE,null,null,null,null,Vendys & V Zákupy
-2386970284,50.7411063,14.2951967,CZE,null,null,null,null,Prim Benešov nad Plou�?nicí
+2386970284,50.7411063,14.2951967,CZE,null,null,null,null,Prim Benešov nad Ploučnicí
 2398598970,50.9634933,14.5589227,CZE,null,null,null,null,null
 2398645161,51.0045199,14.47253,CZE,null,null,null,null,Avia Šluknov
 2411639576,48.9100435,13.8717451,CZ,Volary,null,null,38451,Benzina - Volary
@@ -3699,10 +3701,10 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 2704707216,50.6321048,13.8354607,CZE,null,null,null,null,OMV Teplice
 2705268639,50.4497074,13.5980506,CZE,null,null,null,null,Tank Ono - ČS Havraň
 2705268640,50.6942573,13.9405546,CZE,null,null,null,null,Tank Ono - ČS Chlumec
-2705275505,50.4237557,13.4706963,CZE,null,null,null,null,Tank Ono - ČS Chomutov - Pře�?aply
+2705275505,50.4237557,13.4706963,CZE,null,null,null,null,Tank Ono - ČS Chomutov - Přečaply
 2705275506,50.6835884,14.016608,CZE,null,null,null,null,Tank Ono - ČS Ústí n. L., Božtěšická
 2706659464,50.6562477,14.0106145,CZE,null,null,null,null,G.A.S. Petroleum Ústí n. Labem
-2706668355,50.6590647,14.0326538,CZE,null,null,null,null,MOL, Ústí nad Labem, Revolu�?ní
+2706668355,50.6590647,14.0326538,CZE,null,null,null,null,MOL, Ústí nad Labem, Revoluční
 2708787717,50.7319783,13.7620871,CZE,null,null,null,41501,MOL, Cínovec
 2708787725,50.6603756,13.8010182,CZE,null,null,null,null,LPG
 2708787726,50.7188431,13.6869709,CZE,null,null,null,null,Fill
@@ -3712,7 +3714,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 2713918584,50.7876025,14.8095459,CZE,null,null,null,null,Benzina Plus Rynoltice
 2822172179,50.2398506,12.7549414,CZE,null,null,null,null,Benzina Chodov
 2885706095,50.6451304,14.7395589,CZE,null,null,null,null,Pap Oil Mimoň
-2926236304,50.7751757,14.2134643,CZE,Dě�?ín,null,null,40502,Benzina Dě�?ín, Litoměřická
+2926236304,50.7751757,14.2134643,CZE,Děčín,null,null,40502,Benzina Děčín, Litoměřická
 2953934085,50.4990067,13.6614789,CZE,null,null,null,null,Shell
 2979104843,50.2767016,12.8122956,CZE,null,null,null,null,MTV Group
 3079819149,50.4843289,13.3101875,CZE,null,null,null,null,MOL, Křimov
@@ -3721,7 +3723,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 3241772184,50.7804873,15.0298021,CZE,null,null,null,null,MOL, Liberec Londýnská
 3261246973,49.4185511,12.8742243,CZE,null,null,null,null,Tank Ono - ČS Havlovice u Domažlic
 3261647326,50.783844,14.6160852,CZE,null,null,null,null,Tank Ono - ČS Cvikov
-3334249311,50.785059,14.2405473,CZE,Dě�?ín,null,null,40502,Benzina, Dě�?ín Kamenická
+3334249311,50.785059,14.2405473,CZE,Děčín,null,null,40502,Benzina, Děčín Kamenická
 3334249796,50.6630957,13.7990061,CZE,null,null,null,null,null
 3409298109,50.0471324,12.3518524,CZE,null,null,null,null,null
 3409298122,50.0482058,12.3539018,CZE,null,null,null,null,null
@@ -3768,13 +3770,13 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 5527137061,50.7164258,14.5448135,CZE,null,null,null,null,Vendys & V Častolovice
 5614196290,49.8627419,12.7368148,CZE,null,null,null,null,EuroOil
 5614196309,49.5117167,12.8026806,CZE,null,null,null,null,EuroOil Poběžovice
-5614196315,49.4831126,13.1147505,CZE,null,null,null,null,EuroOil Kolove�?
+5614196315,49.4831126,13.1147505,CZE,null,null,null,null,EuroOil Koloveč
 5614197721,49.2943922,13.1453326,CZE,null,null,null,null,EuroOil Nýrsko
 5614197727,49.0995088,13.6884031,CZE,null,null,null,null,EuroOil Zdíkovec
 5614230054,50.8961758,14.6264166,CZE,null,null,null,null,EuroOil Varnsdorf
 5614230055,50.8736296,14.5847849,CZE,null,null,null,null,EuroOil Dolní Podluží
-5614230056,50.879151,14.2379912,CZE,null,null,null,null,EuroOil Hřensko, Hrani�?ní přechod
-5614230063,50.7804306,14.1444583,CZE,null,null,null,null,EuroOil Dě�?ín - Bynov
+5614230056,50.879151,14.2379912,CZE,null,null,null,null,EuroOil Hřensko, Hraniční přechod
+5614230063,50.7804306,14.1444583,CZE,null,null,null,null,EuroOil Děčín - Bynov
 5614230064,50.6723361,14.0331833,CZE,null,null,null,null,EuroOil Ústí nad Labem, Skřivánek
 5614230075,50.6651922,14.0827731,CZE,null,null,null,null,EuroOil Ústí nad Labem, Krásné Březno
 5614230080,50.4271361,13.2632089,CZE,null,null,null,null,EuroOil Prunéřov - Ušák
@@ -3783,7 +3785,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 5695450500,50.7840847,15.0228493,CZE,null,null,null,null,EuroOil Stráž nad Nisou
 5970039843,49.5847935,12.579768,CZE,null,null,null,null,null
 6074592787,48.911045,13.8814402,CZE,null,null,null,null,RoBiN OIL Volary
-6283886682,50.7209702,14.1888736,CZE,null,null,null,null,Tank Ono - ČS Dobkovice u Dě�?ína
+6283886682,50.7209702,14.1888736,CZE,null,null,null,null,Tank Ono - ČS Dobkovice u Děčína
 6742711231,50.3839343,13.2736489,CZE,null,null,null,null,Benzina - Kadaň
 6743997080,50.38893,13.19504,CZE,null,null,null,null,Benzina
 6791194843,50.3121568,12.5213601,CZE,null,null,null,null,MOL, Kraslice
@@ -3792,7 +3794,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 7365245915,50.1031542,12.4862422,CZE,null,null,null,null,MOL, Odrava u Chebu
 7365245916,50.0860948,12.2643739,CZE,null,null,null,null,MOL, Pomezí směr ČR
 7365245926,50.0870293,12.2651719,CZE,null,null,null,null,MOL, Pomezí směr D
-7365245957,50.1965742,12.2155644,CZE,null,null,null,null,MOL, Nový Ž�?ár u Aše
+7365245957,50.1965742,12.2155644,CZE,null,null,null,null,MOL, Nový Žďár u Aše
 7366403296,50.6573217,13.9985226,CZE,null,null,null,null,Benzina, Ústí nad Labem, Předlice
 7366403301,50.662639,14.0717939,CZE,null,null,null,null,Benzina, Ústí nad Labem, Přístavní
 7366403303,50.712014,13.9700469,CZE,null,null,null,null,MOL, Telnice Varvažov - D8 - směr od Prahy
@@ -3807,7 +3809,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 7554183213,49.3487656,12.9971065,CZE,null,null,null,null,ArmEx Všeruby
 7554212432,50.0872719,12.2606242,CZE,null,null,null,null,ArmEx Pomezí
 7554212448,50.166895,12.315811,CZE,null,null,null,null,ArmEx Vojtanov
-7554212452,50.776296,14.2324407,CZE,null,null,null,null,ArmEx Dě�?ín
+7554212452,50.776296,14.2324407,CZE,null,null,null,null,ArmEx Děčín
 7554212463,49.8899917,12.6045655,CZE,null,null,null,null,ArmEx Broumov
 7555256748,50.7840422,15.0226661,CZE,null,null,null,null,null
 7555256750,50.7448258,15.0521995,CZE,null,null,null,null,Liad Liberec
@@ -3913,7 +3915,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 25213574,48.570531,7.7641441,FRA,null,null,null,null,Avia
 25213628,48.9718916,7.0691033,FRA,null,null,null,null,TotalEnergies
 25213745,49.1901771,6.9079041,FRA,null,null,null,null,Station Total
-25213793,49.1170605,7.0913618,FRA,null,null,null,null,C. C. Cora
+25213793,49.1170482,7.0913718,FRA,null,null,null,null,C. C. Cora
 25214132,48.655109,7.7241086,FRA,null,null,null,null,Cora
 25214447,48.1297666,7.3690261,FRA,Colmar,null,null,68019,Station Service Cora
 158780440,48.8241736,8.0320954,FRA,null,null,null,null,Total Contact
@@ -4318,7 +4320,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 567221977,52.0517728,6.3048708,NLD,Hengelo (Gld),null,null,7255KW,Tinq
 567222920,52.2539335,6.7742607,NL,Hengelo,null,null,null,Tinq
 567224137,51.9483696,5.7571175,NL,Heteren,null,null,null,Tinq
-567419397,52.7243343,6.9989751,NL,Klazienaveen,null,null,null,Tinq
+567419397,52.7243343,6.9989751,NL,Klazienaveen,null,null,7891GK,Tinq
 567443052,51.9852183,6.5583266,NLD,Lichtenvoorde,null,null,7131BH,Tinq
 567443765,52.2490476,6.9159971,NL,Enschede,null,null,7524AG,Tinq
 567444233,53.3302632,6.7409536,NL,Loppersum,null,null,9919BH,Tinq
@@ -4390,7 +4392,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 929877605,50.8612535,6.0759956,NLD,Kerkrade,null,null,6461HM,null
 933505159,50.9049335,6.0192789,NLD,null,null,null,null,Jeurissen
 933552358,52.86643,7.0048963,NLD,null,null,null,null,Tankstation Grooten
-945268892,53.3334761,6.9276699,NLD,null,null,null,null,null
+945268892,53.3334761,6.9276699,NLD,null,null,null,null,Shell
 956460359,52.2788526,6.804843,NLD,null,null,null,null,null
 974161167,52.2955517,6.7547358,NLD,null,null,null,null,null
 988893730,51.348491,6.1848043,NLD,null,null,null,null,null
@@ -4444,7 +4446,6 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 1532860695,51.0346017,5.8624251,NLD,Nieuwstadt,null,null,6118CK,Lukoil Nieuwstadt
 1539413850,52.5666015,6.621695,NLD,null,null,null,null,Avia
 1539413853,52.5602656,6.6293836,NLD,null,null,null,null,Peut
-1554793763,52.2648122,6.8055198,NLD,null,null,null,null,Elan
 1569496369,51.5556023,6.0984258,NLD,null,null,null,null,null
 1572656374,51.7513805,5.7320566,NLD,Velp,null,null,5363SV,Total
 1585112786,52.7213145,6.4857774,NLD,Hoogeveen,null,null,7902LE,HAAN Roozenboom
@@ -4506,14 +4507,14 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 1793623806,51.1980212,5.7219958,NLD,null,null,null,null,Shell
 1802165485,52.1378585,6.6244978,NLD,null,null,null,null,ESSO
 1802174822,52.1327713,6.6175777,NLD,Neede,null,null,7161BB,Tango Neede
-1802174824,52.1351602,6.6280436,NLD,null,null,null,null,AMIGO
+1802174824,52.1351602,6.6280436,NLD,null,null,null,null,Amigo
 1803280599,52.6984127,6.7565003,NLD,null,null,null,null,null
 1805044052,51.8256378,5.7597651,NLD,Nijmegen,null,null,6546AR,Esso
 1805059408,51.8169689,5.7659487,NLD,null,null,null,null,Gulf
 1818222581,52.1735885,6.7425912,NLD,null,null,null,null,Netto Tank Stepelo
 1822985890,53.4128245,6.7239327,NLD,null,null,null,null,null
 1829228769,51.9010969,6.2575586,NLD,null,null,null,null,van Remmen Gademan
-1851464718,52.345089,6.6571825,NLD,null,null,null,null,BP Henriette Roland Holstlaan
+1851464718,52.3450947,6.6572147,NLD,null,null,null,null,BP Henriette Roland Holstlaan
 1851464719,52.3415384,6.6572354,NLD,null,null,null,null,ArgosOil
 1851464737,52.3322457,6.6534006,NLD,null,null,null,null,Shell Henriette Roland Holstlaan
 1851464743,52.3282757,6.6495623,NLD,null,null,null,null,Esso Henriette Roland Holstlaan
@@ -4847,7 +4848,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 5980809830,51.0702401,5.8190086,NLD,Born,null,null,6121RE,null
 5999834278,52.6505141,6.7432852,NLD,null,null,null,null,Shell
 6058020731,51.3294023,5.9675782,NL,Panningen,null,null,5981WX,Tango Panningen
-6093819394,52.9812016,6.9701117,NLD,null,null,null,null,null
+6093819394,52.9812016,6.9701117,NLD,null,null,null,null,BP
 6095547390,53.0702941,6.9551107,NLD,Nieuwe Pekela,null,null,9663RL,Argos
 6186587219,50.9270248,5.8806683,NLD,null,null,null,null,null
 6223086507,52.3593226,6.5128439,NLD,Nijverdal,null,null,7442PA,Fieten Olie
@@ -4883,7 +4884,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 8543914579,50.8824481,6.0773708,NLD,null,null,null,null,null
 8626835796,52.4563919,6.5656408,NLD,null,null,null,null,Oosterveen's Oliehandel
 8712109277,52.0774266,6.4581586,NLD,Ruurlo,null,null,7261ST,Argos
-8730337904,52.2649014,6.8049102,NLD,null,null,null,null,null
+8730337904,52.2649014,6.8049102,NLD,null,null,null,null,Argos
 8744827545,50.9304905,5.935977,NLD,Brunssum,null,null,6446XC,Esso
 8755616424,52.0389735,6.6275759,NLD,null,null,null,null,Netto Tank Groenlo
 8894788259,50.8398023,5.8882887,NLD,Wijlre,null,null,6321GG,Tinq
@@ -4934,7 +4935,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 383886124,51.1470244,15.1780246,POL,null,null,null,null,null
 391052402,53.420916,14.5007928,PL,Szczecin,null,null,71-026,Shell 4134 Europejska
 410375102,53.454797,14.4731624,POL,null,null,null,null,Statoil 123
-463435014,51.5396868,14.7341149,POL,�?ęknica,null,null,68-208,Horex
+463435014,51.5396868,14.7341149,POL,Łęknica,null,null,68-208,Horex
 494590832,53.4291997,14.4662215,POL,null,null,null,null,null
 496315965,53.3849633,14.6420595,PL,Szczecin,null,null,70-772,Circle K
 496315984,53.3955415,14.615961,PL,Szczecin,null,null,71-675,Orlen
@@ -4966,13 +4967,13 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 1271218192,52.8481834,14.1400013,POL,Cedynia,null,null,74-520,Apexim AB
 1320586765,51.2891627,15.2088363,POL,Węgliniec,null,null,59-940,Zenkner
 1320736239,51.1592356,15.0068702,POL,Zgorzelec,null,null,59-900,BP
-1325373630,51.1557868,15.0295334,POL,�?agów,null,null,59-900,Carrefour
+1325373630,51.1557868,15.0295334,POL,Łagów,null,null,59-900,Carrefour
 1359689720,53.4509478,14.541771,POL,null,null,null,null,Circle K Express
 1366173661,53.4301214,14.4738815,POL,null,null,null,null,null
 1367150216,52.8450179,14.1335306,POL,null,null,null,null,SB Tank Hohenwutzen
 1391549035,52.5958646,14.6525914,POL,null,null,null,null,Log
-1414157561,51.6485193,14.8266308,POL,null,null,null,null,Moya
-1414157565,51.6501157,14.826543,POL,null,null,null,null,BP
+1414157561,51.6485193,14.8266308,POL,Trzebiel,null,null,68-212,Moya
+1414157565,51.6501157,14.826543,POL,Trzebiel,null,null,68-212,BP
 1415441055,51.1892962,15.1112186,POL,null,null,null,null,BP
 1461558895,51.908979,14.718368,POL,null,null,null,66-620,Circle K
 1726552761,51.7521875,14.6680672,POL,null,null,null,68-343,Circle K
@@ -5000,13 +5001,12 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 2458616003,53.4428679,14.5704167,POL,null,null,null,null,Orlen
 2511455829,52.3080317,14.6492219,POL,null,null,null,null,BP TIR
 2549600699,51.6389933,14.9987692,POL,null,null,null,null,Orlen
-2555184284,51.5412994,14.7401159,POL,�?ęknica,null,null,68-208,BP �?ęknica
+2555184284,51.5412994,14.7401159,POL,Łęknica,null,null,68-208,BP Łęknica
 2675995749,53.3920438,14.5043712,POL,null,null,null,null,Bobryk
 2844577997,51.5445977,14.747874,POL,null,null,null,null,Total
 2870081383,52.7395575,14.7143556,POL,Dębno,null,null,74-400,Orlen
 2870081384,52.7398795,14.7144355,POL,Dębno,null,null,74-400,PKS
 2870082001,52.7409983,14.6860317,POL,Dębno,null,null,74-400,DEC
-2870082007,52.7414932,14.6863643,POL,Dębno,null,null,74-400,SKR
 2887942888,52.3375863,14.8279617,POL,null,null,null,null,EuroOil
 3126379887,51.5231972,15.2151834,POL,null,null,null,null,Orlen
 3231564073,52.4846428,14.6492089,POL,null,null,null,null,Moya
@@ -5017,7 +5017,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 3454054583,51.1521756,15.0006342,POL,null,null,null,null,Lotos Optima
 3488767949,53.3886018,14.6769952,POL,null,null,null,null,Polmax
 3579916005,52.5879876,14.6554862,POL,Kostrzyn nad Odrą,null,null,66-470,Orlen
-3613319347,51.6351462,14.8609711,POL,null,null,null,null,Shell
+3613319347,51.6351462,14.8609711,POL,Królów,null,null,68-212,Shell
 3634939598,53.381224,14.6764918,POL,null,null,null,null,Bobryk
 3638070098,51.5682766,15.049384,POL,null,null,null,null,null
 3665654028,52.9613326,14.4442259,POL,null,null,null,null,Orlen
@@ -5085,7 +5085,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 6805412085,51.1623266,15.028685,POL,null,null,null,null,Citronex dyskont paliwowy
 7254869075,51.9054395,14.7009038,POL,null,null,null,66-620,BP
 7549679139,51.180586,15.0337127,POL,null,null,null,null,Circle K
-7809709889,51.6352212,14.8616288,POL,Królów,null,null,68-212,Piepszyk
+7809709889,51.6352212,14.8616288,POL,Królów,null,null,68-212,Pieprzyk
 7948791262,51.1892191,15.1077601,POL,null,null,null,59-900,BP
 7959261468,51.2106753,15.2379543,POL,null,null,null,null,Lotos
 8059814007,51.6382072,14.8148388,POL,null,null,null,null,null
@@ -5110,11 +5110,12 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 9976697578,51.1760035,15.0317246,POL,null,null,null,null,Shell
 10005126350,52.7325556,14.6962702,POL,null,null,null,null,Intermarché
 10069413320,53.4324463,14.5518702,POL,null,null,null,null,Orlen
+10085663224,51.9636362,14.7237081,POL,Gubin,null,null,66-620,Circle K
+10107655308,52.7414885,14.6863648,POL,Dębno,null,null,74-400,SP Avia
 28219645,47.4320909,8.676093,CHE,null,null,null,null,null
 29881492,47.686119,8.621418,CHE,Neuhausen am Rheinfall,null,null,8212,Shell Rheinfall
 29881496,47.6822764,8.6093701,CHE,null,null,null,null,null
 29882004,47.6799675,8.6064702,CHE,null,null,null,null,null
-29885119,47.6866921,8.6114652,CHE,null,null,null,null,Agip
 29885121,47.6773289,8.6005845,CHE,null,null,null,null,Wegmüller
 30011079,47.714297,8.5161525,CHE,null,null,null,null,Ruedi Rüssel
 34078845,47.4956958,8.7129812,CHE,Winterthur,null,null,8406,Migrol Service Zürcherstrasse
@@ -5549,7 +5550,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 4088731206,47.3962823,8.2028678,CHE,Othmarsingen,null,null,5504,BEBECO Othmarsingen
 4088976020,47.4752745,7.7226734,CHE,Liestal,null,null,4410,BEBECO
 4089017613,47.4286035,8.5179685,CHE,Zürich,null,null,8046,BEBECO
-4089035400,47.4108829,8.511542,CHE,Zürich,null,null,8093,BEBECO
+4089035400,47.410457,8.5121281,CHE,Zürich,null,null,8093,BEBECO
 4090478031,47.4878037,8.217243,CHE,Brugg,null,null,5200,BEBECO Brugg
 4094071624,47.4596265,8.5806933,CHE,Kloten,null,null,8302,BEBECO
 4095001680,47.3942795,9.5732508,CHE,null,null,null,null,null
@@ -5643,7 +5644,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 6120031542,47.4811737,7.9759872,CHE,null,null,null,null,Agrola
 6180364746,47.5967675,8.6695533,CHE,null,null,null,null,Gewerbehaus 5
 6193616973,47.5465053,8.8417873,CHE,null,null,null,null,Agrola
-6223284379,47.6511794,8.6527307,CHE,Benken,null,null,8463,Garage Bolli
+6223284379,47.6511794,8.6527307,CHE,Benken ZH,null,null,8463,Garage Bolli
 6251318201,47.5713016,8.9145118,CHE,null,null,null,null,BP
 6326773386,47.6685485,8.9856754,CHE,null,null,null,8266,Eni Tankstelle
 6414144591,47.4951105,7.7236395,CHE,Liestal,null,null,4410,Eco Stop
@@ -5688,7 +5689,7 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 7710938451,47.483277,7.5395795,CHE,Ettingen,null,null,4107,Migrol Tankstelle Ettingen
 7710975140,47.4492327,8.5962889,CHE,Kloten,null,null,8302,Migrol Tankstelle AMAG Kloten
 7765697299,47.4919525,9.2444455,CHE,null,null,null,null,Agrola
-7922806895,47.4801068,9.5316125,CHE,null,null,null,null,Shell Staad
+7922806895,47.4801086,9.5316053,CHE,null,null,null,null,Shell Staad
 7923664286,47.5580486,8.4988353,CHE,null,null,null,null,null
 7976103204,47.4795882,9.5281745,CHE,Staad SG,null,null,9422,Avia
 8112296024,47.6716714,8.4645069,CHE,null,null,null,null,null
@@ -5727,3 +5728,4 @@ c513c273-c678-4532-acdb-6a298884ab7a,53.9104854,9.1400428,DE,Brunsbüttel,Kufers
 10052272014,47.3719364,7.9874672,CHE,Obergösgen,null,null,4653,Ruedi Rüssel
 10052272015,47.4718532,8.0525984,CHE,Herznach,null,null,5027,Ruedi Rüssel
 10068851677,47.441221,9.3933697,CHE,null,null,null,null,null
+10081431035,47.6406736,9.1921632,CHE,null,null,null,null,ecostop
