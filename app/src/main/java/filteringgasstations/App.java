@@ -24,9 +24,7 @@ import static filteringgasstations.Utils.distance;
 
 public class App {
     public static final int RANGE_KM = 20; // select the range
-    public static final String FORMAT = "csv"; // select csv or json
     public static final String ROUTING_URL = "http://router.project-osrm.org/route/v1/driving/";
-
     static HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
     static List<OverpassGasStation> allStationsIn20KmBorder = new ArrayList<>();
     static List<GasStationPair> allPairsIn10Km = new ArrayList<>();
@@ -42,13 +40,10 @@ public class App {
         readGermanStations();
 
         // For every country, check for every gas station the distance to all points of the german border
-        String s1 = "output/gasStationsRange";
-
+        System.out.println();
         System.out.println("Stations inside range of " + RANGE_KM + "km");
-        if (FORMAT.equals("csv"))
-            gasStationsInRangeCSV(germanBorders, s1);
-        else
-            gasStationsInRangeJSON(germanBorders, s1);
+        gasStationsInRange(germanBorders, "output/gasStationsRange");
+
         System.out.println();
         System.out.println("Calculating distances between stations");
         evaluateDistancesBetweenStations();
@@ -98,46 +93,7 @@ public class App {
         return Collections.emptyList();
     }
 
-    private static void gasStationsInRangeJSON(List<BorderPoint> germanBorders, String s1) {
-        boolean found = false;
-        int counterFound = 0;
-
-        File filejson = new File("output");
-        if (!filejson.exists()) {
-            var _bool = filejson.mkdir();
-        }
-        try {
-
-            String filenamejson = s1.concat(String.valueOf(RANGE_KM)).concat(".json");
-            filejson = new File(filenamejson);
-            Gson gson = new Gson();
-            FileWriter fwjson = new FileWriter(filejson);
-
-            for (CountryCode country : CountryCode.values()) {
-
-                List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
-
-                for (OverpassGasStation g : countryGasList) {
-                    for (BorderPoint b : germanBorders) {
-                        if ((distance(b.latitude, g.lat, b.longitude, g.lon) < RANGE_KM) && (!found)) {
-                            allStationsIn20KmBorder.add(g);
-                            counterFound++;
-                            found = true;
-                        }
-                    }
-                    found = false;
-                }
-                System.out.println(country.getName() + ": " + counterFound + " gas stations inside " + RANGE_KM + "km");
-                counterFound = 0;
-            }
-            gson.toJson(allStationsIn20KmBorder, fwjson);
-            fwjson.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void gasStationsInRangeCSV(List<BorderPoint> germanBorders, String s1) {
+    private static void gasStationsInRange(List<BorderPoint> germanBorders, String path) {
         boolean found = false;
         int counterFound = 0;
 
@@ -147,7 +103,7 @@ public class App {
         }
 
         try {
-            String filenamecsv = s1.concat(String.valueOf(RANGE_KM)).concat(".csv");
+            String filenamecsv = path.concat(String.valueOf(RANGE_KM)).concat(".csv");
             filecsv = new File(filenamecsv);
             FileWriter fwcsv = new FileWriter(filecsv);
             fwcsv.append("id,lat,lon,country,city,street,housenumber,postcode,name\n");
