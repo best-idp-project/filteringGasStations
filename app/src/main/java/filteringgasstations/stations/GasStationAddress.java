@@ -1,7 +1,9 @@
-package filteringgasstations;
+package filteringgasstations.stations;
+
+import filteringgasstations.geolocation.CountryCode;
 
 public class GasStationAddress {
-    String country;
+    CountryCode country;
     String city;
     String street;
     String housenumber;
@@ -9,7 +11,7 @@ public class GasStationAddress {
     String name;
 
 
-    public GasStationAddress(String country, String city, String street, String housenumber, String postcode, String name) {
+    public GasStationAddress(CountryCode country, String city, String street, String housenumber, String postcode, String name) {
         this.country = country;
         this.city = city;
         this.street = street;
@@ -18,11 +20,11 @@ public class GasStationAddress {
         this.name = name;
     }
 
-    public String getCountry() {
+    public CountryCode getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(CountryCode country) {
         this.country = country;
     }
 

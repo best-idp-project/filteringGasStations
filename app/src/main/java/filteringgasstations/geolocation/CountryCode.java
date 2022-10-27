@@ -1,4 +1,4 @@
-package filteringgasstations;
+package filteringgasstations.geolocation;
 
 public enum CountryCode {
     GER ("Germany", "DE"),
@@ -22,7 +22,7 @@ public enum CountryCode {
         return code;
     }
 
-    private CountryCode(String name, String code) {
+    CountryCode(String name, String code) {
         this.name = name; this.code = code;
     }
 }

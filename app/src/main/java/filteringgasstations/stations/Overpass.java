@@ -1,4 +1,4 @@
-package filteringgasstations;
+package filteringgasstations.stations;
 
 public class Overpass {
 

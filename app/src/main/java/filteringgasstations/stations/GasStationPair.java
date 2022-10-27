@@ -1,4 +1,4 @@
-package filteringgasstations;
+package filteringgasstations.stations;
 
 public class GasStationPair {
     OverpassGasStation firstStation;
@@ -38,5 +38,15 @@ public class GasStationPair {
         this.drivingTime = drivingTime;
     }
 
+    public OverpassGasStation getFirstStation() {
+        return firstStation;
+    }
 
+    public OverpassGasStation getSecondStation() {
+        return secondStation;
+    }
+
+    public Double getAirDistance() {
+        return airDistance;
+    }
 }
