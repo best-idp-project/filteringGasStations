@@ -1,22 +1,22 @@
 package filteringgasstations;
 
 public class GasStationPair {
-    String idFirstStation;
-    String idSecondStation;
+    OverpassGasStation firstStation;
+    OverpassGasStation secondStation;
     Double airDistance; // meters
     Double drivingDistance; // meters
     Double drivingTime; // seconds
 
-    public GasStationPair(String idFirstStation, String idSecondStation, Double airDistance) {
-        this.idFirstStation = idFirstStation;
-        this.idSecondStation = idSecondStation;
+    public GasStationPair(OverpassGasStation firstStation, OverpassGasStation secondStation, Double airDistance) {
+        this.firstStation = firstStation;
+        this.secondStation = secondStation;
         this.airDistance = airDistance;
     }
 
     @Override
     public String toString() {
-        return "\"" + idFirstStation + "\"," +
-                "\"" + idSecondStation + "\"," +
+        return "\"" + firstStation.id + "\"," +
+                "\"" + secondStation.id + "\"," +
                 airDistance + "," +
                 drivingDistance + "," +
                 drivingTime;

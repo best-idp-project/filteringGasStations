@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static filteringgasstations.Utils.distance;
 
@@ -25,32 +26,29 @@ public class App {
     static List<GasStationPair> allPairsIn10Km = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println("*** START ***");
-
-        System.out.println("READ ALL POINTS OF THE GERMAN BORDER");
+        System.out.println("Reading border");
         List<BorderPoint> germanBorders = readGermanBorder();
 
         //Read all countries' gas stations
-        System.out.println("\nHOW MANY GAS STATIONS PER COUNTRY");
+        System.out.println();
+        System.out.println("Stations per country");
         readGasStationsForEachCountry();
         readGermanStations();
 
         // For every country, check for every gas station the distance to all points of the german border
         String s1 = "output/gasStationsRange";
 
-        System.out.println("\nHOW MANY GAS STATIONS INSIDE RANGE");
+        System.out.println("Stations inside range of " + RANGE_KM + "km");
         if (FORMAT.equals("csv"))
             gasStationsInRangeCSV(germanBorders, s1);
         else
             gasStationsInRangeJSON(germanBorders, s1);
-
-        System.out.println("\nEVALUATING DISTANCES BETWEEN STATIONS");
+        System.out.println();
+        System.out.println("Calculating distances between stations");
         evaluateDistancesBetweenStations();
 
-        System.out.println("PRINTING ALL PAIRS ON OUTPUT FILE\n");
+        System.out.println("Write valid pairs");
         printAllPairs();
-
-        System.out.println("*** END ***");
     }
 
     private static List<BorderPoint> readGermanBorder() {
@@ -215,49 +213,54 @@ public class App {
 
     }
 
-    public static void evaluateDistancesBetweenStations() {
-        int counter = 0;
-        // this implementation to avoid that the same pair evaluated twice
-        for (int i = 0; i < allStationsIn20KmBorder.size(); i++) {
-            for (int j = i + 1; j < allStationsIn20KmBorder.size(); j++) {
-                OverpassGasStation first = allStationsIn20KmBorder.get(i);
-                OverpassGasStation second = allStationsIn20KmBorder.get(j);
-                // at least one of the two must be a german station, pairs between foreign stations are not interesting
-                if (!Objects.equals(first.addr.country, "DE") && !Objects.equals(second.addr.country, "DE"))
+    private static List<GasStationPair> getPairsOfInterest(List<OverpassGasStation> stations, double directDistanceLimit) {
+        List<GasStationPair> pairs = new ArrayList<>();
+        for (int fromIndex = 0; fromIndex < stations.size(); fromIndex++) {
+            for (int toIndex = fromIndex + 1; toIndex < stations.size(); toIndex++) {
+                OverpassGasStation from = stations.get(fromIndex);
+                OverpassGasStation to = stations.get(toIndex);
+                if (!"DE".equals(from.addr.country) && !"DE".equals(to.addr.country)) {
                     continue;
-
-                double airDistance = distance(first.lat, second.lat, first.lon, second.lon);
-                if (airDistance <= 10) {
-                    counter++;
-                    GasStationPair pair = new GasStationPair(first.id, second.id, airDistance * 1000);
-                    System.out.println("http req #: " + counter + "/45610");
-                    getRoute(first, second);
-                    httpRequestDrivingTimeAndDistances(first, second, pair);
-                    assert (((first.addr.country != null) && (first.addr.country.equals("DE"))) ||
-                            ((second.addr.country != null) && second.addr.country.equals("DE")));
-                    allPairsIn10Km.add(pair);
                 }
+                double directDistance = distance(from.lat, to.lat, from.lon, to.lon);
+                if (directDistance > directDistanceLimit) {
+                    continue;
+                }
+                pairs.add(new GasStationPair(from, to, directDistance));
             }
         }
-        System.out.println("\nThere are " + allPairsIn10Km.size() + " pairs with air distance <= 10 km\n");
+        return pairs;
     }
 
-    public static void httpRequestDrivingTimeAndDistances(OverpassGasStation first, OverpassGasStation second, GasStationPair pair) {
-        String builtUrl = "http://router.project-osrm.org/route/v1/driving/" + first.lon + "," + first.lat + ";"
-                + second.lon + "," + second.lat + "?overview=false";
-        try {
-            URL url = new URL(builtUrl);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
+    public static void evaluateDistancesBetweenStations() {
+        var pairs = getPairsOfInterest(allStationsIn20KmBorder, 10);
+        AtomicInteger counter = new AtomicInteger(0);
+        allPairsIn10Km = pairs.parallelStream().peek(gasStationPair -> {
+            httpRequestDrivingTimeAndDistances(gasStationPair);
+            System.out.println("http req #: " + counter.incrementAndGet() + "/" + pairs.size());
+        }).toList();
+        System.out.println("There are " + allPairsIn10Km.size() + " pairs with air distance <= 10 km");
+    }
 
-            int status = con.getResponseCode();
-            if (status != 200) {
-                System.out.println("REQUEST FAILED");
-                System.exit(0);
-            }
+    public static void httpRequestDrivingTimeAndDistances(GasStationPair pair) {
+        String builtUrl = "http://router.project-osrm.org/route/v1/driving/" + pair.firstStation.lon + "," + pair.firstStation.lat + ";"
+                + pair.secondStation.lon + "," + pair.secondStation.lat + "?overview=false";
+        try {
+            int status = 0;
+            HttpURLConnection connection;
+            URL url = new URL(builtUrl);
+            do {
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                status = connection.getResponseCode();
+                if (status != 200) {
+                    System.out.println("REQUEST FAILED");
+                }
+            } while (status != 200);
 
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
+                    new InputStreamReader(connection.getInputStream()));
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 JsonObject response = new Gson().fromJson(inputLine, JsonObject.class);
@@ -272,7 +275,7 @@ public class App {
                 pair.setDrivingTime(drivingTime);
             }
             in.close();
-            con.disconnect();
+            connection.disconnect();
 
         } catch (Exception e) {
             e.printStackTrace();
