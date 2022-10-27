@@ -12,7 +12,12 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static filteringgasstations.Utils.distance;
 
@@ -20,6 +25,7 @@ import static filteringgasstations.Utils.distance;
 public class App {
     public static final int RANGE_KM = 20; // select the range
     public static final String FORMAT = "csv"; // select csv or json
+    public static final String ROUTING_URL = "http://router.project-osrm.org/route/v1/driving/";
 
     static HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
     static List<OverpassGasStation> allStationsIn20KmBorder = new ArrayList<>();
@@ -233,17 +239,30 @@ public class App {
     }
 
     public static void evaluateDistancesBetweenStations() {
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
         var pairs = getPairsOfInterest(allStationsIn20KmBorder, 10);
         AtomicInteger counter = new AtomicInteger(0);
-        allPairsIn10Km = pairs.parallelStream().peek(gasStationPair -> {
-            httpRequestDrivingTimeAndDistances(gasStationPair);
-            System.out.println("http req #: " + counter.incrementAndGet() + "/" + pairs.size());
-        }).toList();
+        List<CompletableFuture<GasStationPair>> futures = new ArrayList<>();
+        pairs.forEach(pair -> {
+            CompletableFuture<GasStationPair> job = CompletableFuture.supplyAsync(() -> {
+                httpRequestDrivingTimeAndDistances(pair);
+                System.out.println(Thread.currentThread().getName() + ": http req #: " + counter.incrementAndGet() + "/" + pairs.size());
+                return pair;
+            }, executorService);
+            futures.add(job);
+        });
+        allPairsIn10Km = futures.stream().parallel().map(job -> {
+            try {
+                return job.get();
+            } catch (InterruptedException | ExecutionException e) {
+                return null;
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toList());
         System.out.println("There are " + allPairsIn10Km.size() + " pairs with air distance <= 10 km");
     }
 
     public static void httpRequestDrivingTimeAndDistances(GasStationPair pair) {
-        String builtUrl = "http://router.project-osrm.org/route/v1/driving/" + pair.firstStation.lon + "," + pair.firstStation.lat + ";"
+        String builtUrl = ROUTING_URL + pair.firstStation.lon + "," + pair.firstStation.lat + ";"
                 + pair.secondStation.lon + "," + pair.secondStation.lat + "?overview=false";
         try {
             int status = 0;
