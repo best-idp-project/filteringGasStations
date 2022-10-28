@@ -6,9 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.opencsv.CSVReader;
 import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
-import filteringgasstations.stations.GasStationAddress;
-import filteringgasstations.stations.Overpass;
-import filteringgasstations.stations.OverpassGasStation;
+import filteringgasstations.stations.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

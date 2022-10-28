@@ -55,7 +55,7 @@ public class StationsFinder {
                 if (directDistance > distanceLimit) {
                     continue;
                 }
-                pairs.add(new GasStationPair(from, to, directDistance));
+                pairs.add(new GasStationPair(from, to, from.getAddress().getCountry(), to.getAddress().getCountry(), directDistance));
             }
         }
         return pairs;
@@ -86,6 +86,7 @@ public class StationsFinder {
                 return null;
             }
         }).filter(Objects::nonNull).collect(Collectors.toList());
+
         System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <=" + App.DIRECT_DISTANCE_LIMIT + " km");
     }
 
@@ -134,9 +135,10 @@ public class StationsFinder {
         }
 
         try {
-            filecsv = new File("output/allPairsIn10Km.csv");
+            filecsv = new File("output/AllPairsIn10Km.csv");
             FileWriter fwcsv = new FileWriter(filecsv);
-            fwcsv.append("idFirstStation,idSecondStation,airDistance,drivingDistance,drivingTime\n");
+            fwcsv.append("idFirstStation,idSecondStation,countryCodeFirst,countryCodeSecond," +
+                    "airDistance,drivingDistance,drivingTime\n");
 
             for (GasStationPair pair : pairsInDrivableDistance) {
                 fwcsv.append(pair.toString()).append("\n");

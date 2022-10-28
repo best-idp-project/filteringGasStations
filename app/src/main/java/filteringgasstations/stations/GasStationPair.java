@@ -1,15 +1,21 @@
 package filteringgasstations.stations;
 
+import filteringgasstations.geolocation.CountryCode;
+
 public class GasStationPair {
     OverpassGasStation firstStation;
     OverpassGasStation secondStation;
+    CountryCode countryCodeFirst;
+    CountryCode countryCodeSecond;
     Double airDistance; // meters
     Double drivingDistance; // meters
     Double drivingTime; // seconds
 
-    public GasStationPair(OverpassGasStation firstStation, OverpassGasStation secondStation, Double airDistance) {
+    public GasStationPair(OverpassGasStation firstStation, OverpassGasStation secondStation, CountryCode countryCodeFirst, CountryCode countryCodeSecond, Double airDistance) {
         this.firstStation = firstStation;
         this.secondStation = secondStation;
+        this.countryCodeFirst = countryCodeFirst;
+        this.countryCodeSecond = countryCodeSecond;
         this.airDistance = airDistance;
     }
 
@@ -17,21 +23,14 @@ public class GasStationPair {
     public String toString() {
         return "\"" + firstStation.id + "\"," +
                 "\"" + secondStation.id + "\"," +
+                countryCodeFirst + "," + countryCodeSecond + "," +
                 airDistance + "," +
                 drivingDistance + "," +
                 drivingTime;
     }
 
-    public Double getDrivingDistance() {
-        return drivingDistance;
-    }
-
     public void setDrivingDistance(Double drivingDistance) {
         this.drivingDistance = drivingDistance;
-    }
-
-    public Double getDrivingTime() {
-        return drivingTime;
     }
 
     public void setDrivingTime(Double drivingTime) {

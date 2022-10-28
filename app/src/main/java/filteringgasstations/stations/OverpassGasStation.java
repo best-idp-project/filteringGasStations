@@ -17,7 +17,6 @@ public class OverpassGasStation extends GasStation {
         switch (tags.getOrDefault("addr:country", "")) {
             case "AT" -> defaultCountry = CountryCode.AUT;
             case "BE" -> defaultCountry = CountryCode.BEL;
-            case "CH" -> defaultCountry = CountryCode.CHE;
             case "CZ" -> defaultCountry = CountryCode.CZE;
             case "DE" -> defaultCountry = CountryCode.GER;
             case "DK" -> defaultCountry = CountryCode.DNK;
