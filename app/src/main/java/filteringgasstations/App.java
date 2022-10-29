@@ -9,6 +9,7 @@ public class App {
 
 
     public static void main(String[] args) {
+
         StationsFinder finder = new StationsFinder(DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
