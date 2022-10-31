@@ -1,6 +1,7 @@
 package filteringgasstations.stations;
 
 import filteringgasstations.App;
+import filteringgasstations.database.service.OSRMCacheService;
 import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.routing.Route;
@@ -23,7 +24,9 @@ import java.util.stream.Collectors;
 
 import static filteringgasstations.utils.Utils.distance;
 
+
 public class StationsFinder {
+    private OSRMCacheService osrmCacheService;
 
     private HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
     private final List<OverpassGasStation> stationsNearBorder = new ArrayList<>();
@@ -33,7 +36,8 @@ public class StationsFinder {
     private final double BORDER_LIMIT;
     private final List<BorderPoint> germanBorder;
 
-    public StationsFinder(double directDistanceLimit, double borderLimit) {
+    public StationsFinder(OSRMCacheService osrmCacheService, double directDistanceLimit, double borderLimit) {
+        this.osrmCacheService = osrmCacheService;
         this.DIRECT_DISTANCE_LIMIT = directDistanceLimit;
         this.BORDER_LIMIT = borderLimit;
 
@@ -69,7 +73,7 @@ public class StationsFinder {
         List<CompletableFuture<GasStationPair>> futures = new ArrayList<>();
         pairs.forEach(pair -> {
             CompletableFuture<GasStationPair> job = CompletableFuture.supplyAsync(() -> {
-                Route distances = OSRMClient.getRoute(pair);
+                Route distances = OSRMClient.getRoute(osrmCacheService, pair);
                 if (distances != null) {
                     pair.setDrivingDistance(distances.getDrivingDistance());
                     pair.setDrivingTime(distances.getDrivingTime());
