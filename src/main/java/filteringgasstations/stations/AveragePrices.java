@@ -2,8 +2,11 @@ package filteringgasstations.stations;
 
 import filteringgasstations.database.models.GermanPrice;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class AveragePrices {
@@ -23,6 +26,16 @@ public class AveragePrices {
             list.add(data);
             pointsByDay.put(key, list);
         });
+    }
+
+    private List<GermanPrice> expandData(List<GermanPrice> original) {
+        var truncated = original.stream().map(germanPrice -> {
+            LocalDateTime d = LocalDateTime.parse(germanPrice.getDate().toString());
+            d.minusSeconds(d.getSecondOfMinute());
+            germanPrice.setDate(d.toDate());
+            return germanPrice;
+        }).toList();
+        return truncated;
     }
 
     public OptionalDouble getAverageOf(String date) {
