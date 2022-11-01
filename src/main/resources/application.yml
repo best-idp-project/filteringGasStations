@@ -13,3 +13,5 @@ spring:
     show-sql: false
     generate-ddl: true
     database-platform: org.hibernate.dialect.H2Dialect
+  main:
+    banner-mode: "off"

@@ -1,6 +1,9 @@
 package filteringgasstations;
 
+import filteringgasstations.database.service.BorderPointService;
+import filteringgasstations.database.service.InputFileService;
 import filteringgasstations.database.service.OSRMCacheService;
+import filteringgasstations.database.service.StationOfInterestService;
 import filteringgasstations.stations.StationsFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -12,7 +15,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class App implements CommandLineRunner {
 
     @Autowired
-    private OSRMCacheService service;
+    private OSRMCacheService osrmCacheService;
+
+    @Autowired
+    private InputFileService inputFileService;
+    @Autowired
+    private BorderPointService borderPointService;
+    @Autowired
+    private StationOfInterestService stationOfInterestService;
     public static final int RANGE_KM = 20; // select the range
     public static final double DIRECT_DISTANCE_LIMIT = 10.;
 
@@ -22,11 +32,11 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        StationsFinder finder = new StationsFinder(service, DIRECT_DISTANCE_LIMIT, RANGE_KM);
+        StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
         System.out.println("Stations inside range of " + RANGE_KM + "km");
-        finder.writeStationsOfInterestToFile();
+        finder.writeStationsOfInterestToFile(stationOfInterestService);
 
         System.out.println();
         System.out.println("Calculating distances between stations");

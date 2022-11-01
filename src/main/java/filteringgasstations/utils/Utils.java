@@ -4,9 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.opencsv.CSVReader;
+import filteringgasstations.database.models.InputFile;
+import filteringgasstations.database.service.BorderPointService;
+import filteringgasstations.database.service.InputFileService;
 import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
-import filteringgasstations.stations.*;
+import filteringgasstations.stations.GasStationAddress;
+import filteringgasstations.stations.Overpass;
+import filteringgasstations.stations.OverpassGasStation;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -64,7 +69,7 @@ public class Utils {
     }
 
 
-    public static List<OverpassGasStation> readCountryGasStationsJSON(CountryCode country) {
+    public static List<OverpassGasStation> readCountryGasStationsJSON(InputFileService inputFileService, CountryCode country) {
         Type OVERPASS_TYPE = new TypeToken<Overpass>() {
         }.getType();
         var file = ClassLoader.getSystemClassLoader().getResource("json/" + country.getCode() + ".json");
@@ -82,21 +87,48 @@ public class Utils {
         return Collections.emptyList();
     }
 
-    public static List<BorderPoint> readGermanBorder() {
+    public static boolean hasBorderChanged(InputFileService inputFileService) {
+        String filename = "borders_germany.json";
+        return hasFileChanged(inputFileService, filename);
+    }
+
+    public static boolean hasFileChanged(InputFileService inputFileService, String filename) {
+        var file = ClassLoader.getSystemClassLoader().getResource(filename);
+        assert file != null;
+        Optional<String> checksum = InputFile.getChecksum(filename);
+        assert checksum.isPresent();
+        Optional<InputFile> storedSum = inputFileService.get(filename);
+        return storedSum.map(inputFile -> !inputFile.getHashsum().equals(checksum.get())).orElse(true);
+    }
+
+    public static List<BorderPoint> readGermanBorder(InputFileService inputFileService, BorderPointService borderPointService) {
         List<BorderPoint> points = new ArrayList<>();
+        String filename = "borders_germany.json";
+
         try {
-            Type BORDER_TYPE = new TypeToken<List<List<Double>>>() {
-            }.getType();
-            Gson gson = new Gson();
-            var file = ClassLoader.getSystemClassLoader().getResource("borders_germany.json");
+            var file = ClassLoader.getSystemClassLoader().getResource(filename);
             assert file != null;
-            JsonReader reader = new JsonReader(new FileReader(file.getPath()));
-            List<List<Double>> parsedPoints = gson.fromJson(reader, BORDER_TYPE);
-            points = parsedPoints.stream().filter(array -> array.size() == 2).map(array -> {
-                var longitude = array.get(0);
-                var latitude = array.get(1);
-                return new BorderPoint(latitude, longitude);
-            }).toList();
+
+            if (!hasBorderChanged(inputFileService)) {
+                points = borderPointService.getAll();
+            } else {
+                borderPointService.purge();
+                inputFileService.delete(filename);
+
+                JsonReader reader = new JsonReader(new FileReader(file.getPath()));
+                Type BORDER_TYPE = new TypeToken<List<List<Double>>>() {
+                }.getType();
+                Gson gson = new Gson();
+                List<List<Double>> parsedPoints = gson.fromJson(reader, BORDER_TYPE);
+                points = parsedPoints.stream().filter(array -> array.size() == 2).parallel().map(array -> {
+                    var longitude = array.get(0);
+                    var latitude = array.get(1);
+                    BorderPoint point = new BorderPoint(latitude, longitude);
+                    borderPointService.save(point);
+                    return point;
+                }).toList();
+                inputFileService.save(new InputFile(filename, InputFile.getChecksum(filename).get()));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,13 +136,13 @@ public class Utils {
         return points;
     }
 
-    public static HashMap<CountryCode, List<OverpassGasStation>> readGasStationsForEachCountry() {
+    public static HashMap<CountryCode, List<OverpassGasStation>> readGasStationsForEachCountry(InputFileService inputFileService) {
         HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
         for (CountryCode countryCode : CountryCode.values()) {
             if (countryCode == CountryCode.GER) {
                 continue;
             }
-            List<OverpassGasStation> stations = Utils.readCountryGasStationsJSON(countryCode).stream().toList();
+            List<OverpassGasStation> stations = Utils.readCountryGasStationsJSON(inputFileService, countryCode).stream().toList();
             stations.forEach(station -> station.addImportantFields(countryCode));
 
             allStations.put(countryCode, stations);
