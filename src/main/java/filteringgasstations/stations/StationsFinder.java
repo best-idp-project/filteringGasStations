@@ -1,11 +1,9 @@
 package filteringgasstations.stations;
 
 import filteringgasstations.App;
+import filteringgasstations.database.models.GermanPrice;
 import filteringgasstations.database.models.StationOfInterest;
-import filteringgasstations.database.service.BorderPointService;
-import filteringgasstations.database.service.InputFileService;
-import filteringgasstations.database.service.OSRMCacheService;
-import filteringgasstations.database.service.StationOfInterestService;
+import filteringgasstations.database.service.*;
 import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.routing.Route;
@@ -30,13 +28,16 @@ public class StationsFinder {
     private final List<BorderPoint> germanBorder;
     private OSRMCacheService osrmCacheService;
     private InputFileService inputFileService;
+    private GermanPriceService germanPriceService;
+
     private BorderPointService borderPointService;
-    private HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
+    private HashMap<CountryCode, List<OverpassGasStation>> allStations;
     private List<GasStationPair> pairsInDrivableDistance = new ArrayList<>();
 
-    public StationsFinder(OSRMCacheService osrmCacheService, InputFileService inputFileService, BorderPointService borderPointService, double directDistanceLimit, double borderLimit) {
+    public StationsFinder(OSRMCacheService osrmCacheService, InputFileService inputFileService, BorderPointService borderPointService, GermanPriceService germanPriceService, double directDistanceLimit, double borderLimit) {
         this.osrmCacheService = osrmCacheService;
         this.inputFileService = inputFileService;
+        this.germanPriceService = germanPriceService;
         this.DIRECT_DISTANCE_LIMIT = directDistanceLimit;
         this.BORDER_LIMIT = borderLimit;
 
@@ -140,6 +141,17 @@ public class StationsFinder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<AveragePrices> getPriceDataForGermanStations() {
+        List<AveragePrices> priceData = new ArrayList<>();
+        for (OverpassGasStation station : stationsNearBorder) {
+            if (station.getAddress().getCountry().equals(CountryCode.GER)) {
+                var data = germanPriceService.getAllByStation(station.id);
+                priceData.add(new AveragePrices(station, data));
+            }
+        }
+        return priceData;
     }
 
     public void writeDrivablePairsToFile() {

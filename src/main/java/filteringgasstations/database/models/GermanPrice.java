@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity(name = "german_prices")
-@Table
+@Table(indexes = { @Index(name = "station_index", columnList = "station")})
 public class GermanPrice {
 
     @GeneratedValue(strategy = GenerationType.AUTO)

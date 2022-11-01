@@ -1,12 +1,20 @@
 package filteringgasstations;
 
 import filteringgasstations.database.service.*;
+import filteringgasstations.stations.AveragePrices;
+import filteringgasstations.stations.GasStation;
+import filteringgasstations.stations.OverpassGasStation;
 import filteringgasstations.stations.StationsFinder;
 import filteringgasstations.utils.Utils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
 @SpringBootApplication
@@ -32,8 +40,8 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Utils.readGermanPrices(germanPriceService);
-        StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
+        //Utils.readGermanPrices(germanPriceService);
+        StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, germanPriceService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
         System.out.println("Stations inside range of " + RANGE_KM + "km");
@@ -45,6 +53,13 @@ public class App implements CommandLineRunner {
 
         System.out.println("Write valid pairs");
         finder.writeDrivablePairsToFile();
+
+        DateTime start = new DateTime(2022, 4, 15, 0, 0, 0, 0);
+        DateTime end = new DateTime(2022, 8, 15, 0, 0, 0, 0);
+        List<AveragePrices> stations = finder.getPriceDataForGermanStations();
+        while (end.isAfter(start)) {
+            start.plusDays(1);
+        }
         System.out.println("bye");
         System.exit(0);
     }
