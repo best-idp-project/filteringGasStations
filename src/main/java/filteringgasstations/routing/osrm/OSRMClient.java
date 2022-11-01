@@ -1,19 +1,13 @@
 package filteringgasstations.routing.osrm;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import filteringgasstations.database.models.OSRMCache;
 import filteringgasstations.database.service.OSRMCacheService;
-import filteringgasstations.routing.CachedRoute;
 import filteringgasstations.routing.Route;
 import filteringgasstations.stations.GasStationPair;
-import filteringgasstations.stations.Overpass;
 
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Optional;

@@ -4,19 +4,22 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import filteringgasstations.database.models.GermanPrice;
 import filteringgasstations.database.models.InputFile;
 import filteringgasstations.database.service.BorderPointService;
+import filteringgasstations.database.service.GermanPriceService;
 import filteringgasstations.database.service.InputFileService;
 import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.stations.GasStationAddress;
 import filteringgasstations.stations.Overpass;
 import filteringgasstations.stations.OverpassGasStation;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -174,5 +177,48 @@ public class Utils {
         }
         System.out.println("Germany has " + germanStations.size() + " gas stations");
         return germanStations;
+    }
+
+    public static List<GermanPrice> readGermanPrices(GermanPriceService germanPriceService) {
+        List<GermanPrice> prices = new ArrayList<>();
+        String mainPath = "prices/germany";
+        var path = ClassLoader.getSystemClassLoader().getResource(mainPath);
+        assert path != null;
+        File directory = new File(path.getPath());
+        for (String subdirectoryName : Objects.requireNonNull(directory.list())) {
+            var subPath = ClassLoader.getSystemClassLoader().getResource(mainPath + "/" + subdirectoryName);
+            if (subPath == null) {
+                continue;
+            }
+            File subdirectory = new File(subPath.getPath());
+            System.out.println("Reading " + subdirectory + ":");
+            for (String file : Objects.requireNonNull(subdirectory.list())) {
+                var filePath = ClassLoader.getSystemClassLoader().getResource(mainPath + "/" + subdirectoryName + "/" + file);
+                System.out.println(file);
+                try {
+                    if (filePath == null) {
+                        continue;
+                    }
+                    try (CSVReader reader = new CSVReader(new FileReader(filePath.getPath()))) {
+                        String[] line;
+                        String[] header = reader.readNext();
+                        while ((line = reader.readNext()) != null) {
+                            GermanPrice entry = new GermanPrice(
+                                    DateTime.parse(line[0], DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ssZ")),
+                                    line[1],
+                                    Double.parseDouble(line[2]));
+                            if (germanPriceService.get(entry.getId()).isEmpty()) {
+                                germanPriceService.save(entry);
+                            }
+                            prices.add(entry);
+                        }
+                    }
+                } catch (IOException | CsvValidationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return prices;
     }
 }

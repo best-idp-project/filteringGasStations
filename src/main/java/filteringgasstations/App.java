@@ -1,10 +1,8 @@
 package filteringgasstations;
 
-import filteringgasstations.database.service.BorderPointService;
-import filteringgasstations.database.service.InputFileService;
-import filteringgasstations.database.service.OSRMCacheService;
-import filteringgasstations.database.service.StationOfInterestService;
+import filteringgasstations.database.service.*;
 import filteringgasstations.stations.StationsFinder;
+import filteringgasstations.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class App implements CommandLineRunner {
 
+    @Autowired
+    private GermanPriceService germanPriceService;
     @Autowired
     private OSRMCacheService osrmCacheService;
 
@@ -32,6 +32,7 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        Utils.readGermanPrices(germanPriceService);
         StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();

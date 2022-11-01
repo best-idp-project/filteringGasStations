@@ -99,7 +99,7 @@ public class StationsFinder {
         if (!output.exists()) {
             var _bool = output.mkdir();
         }
-        String filename = "output/gasStationsRange".concat(String.valueOf(this.BORDER_LIMIT)).concat(".csv");
+        String filename = "output/gasStationsRange".concat(String.valueOf((int) this.BORDER_LIMIT)).concat(".csv");
         Arrays.stream(CountryCode.values()).forEach(country -> {
                     List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
                     AtomicInteger countryStations = new AtomicInteger(0);
