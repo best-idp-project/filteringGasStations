@@ -12,7 +12,6 @@ import java.util.Date;
 @Table(indexes = { @Index(name = "station_index", columnList = "station")})
 public class GermanPrice {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     private Date date;

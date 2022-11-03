@@ -18,16 +18,15 @@ public class OSRMClient {
 
     public static Route getRoute(OSRMCacheService cache, GasStationPair pair) {
         String uri = pair.getFirstStation().getLongitude() + "," + pair.getFirstStation().getLongitude() + ";"
-                + pair.getSecondStation().getLongitude() + "," + pair.getSecondStation().getLatitude() + "?overview=false";
+                + pair.getSecondStation().getLongitude() + "," + pair.getSecondStation().getLatitude();
         Optional<OSRMCache> hit = cache.get(uri);
         if (hit.isPresent()) {
-            System.out.println("cache hit");
             return hit.get();
         }
-        String target = URL + uri;
+        String target = URL + uri  + "?overview=false";
         System.out.println(target);
         try {
-            int status = 0;
+            int status;
             HttpURLConnection connection;
             java.net.URL url = new URL(target);
             do {

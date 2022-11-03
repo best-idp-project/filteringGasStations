@@ -1,7 +1,6 @@
 package filteringgasstations.stations;
 
 import filteringgasstations.App;
-import filteringgasstations.database.models.GermanPrice;
 import filteringgasstations.database.models.StationOfInterest;
 import filteringgasstations.database.service.*;
 import filteringgasstations.geolocation.BorderPoint;
@@ -92,14 +91,10 @@ public class StationsFinder {
             }
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
-        System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <=" + App.DIRECT_DISTANCE_LIMIT + " km");
+        System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <= " + App.DIRECT_DISTANCE_LIMIT + " km");
     }
 
     public void writeStationsOfInterestToFile(StationOfInterestService stationOfInterestService) {
-        File output = new File("output");
-        if (!output.exists()) {
-            var _bool = output.mkdir();
-        }
         String filename = "output/gasStationsRange".concat(String.valueOf((int) this.BORDER_LIMIT)).concat(".csv");
         Arrays.stream(CountryCode.values()).forEach(country -> {
                     List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
@@ -130,17 +125,19 @@ public class StationsFinder {
                     System.out.println(country.getName() + ": " + countryStations.get() + " gas stations inside " + this.BORDER_LIMIT + "km");
                 }
         );
-        try {
-            output = new File(filename);
-            FileWriter writer = new FileWriter(output);
-            writer.append("id,lat,lon,country,city,street,housenumber,postcode,name\n");
-            for (OverpassGasStation station : stationsNearBorder) {
-                writer.append(station.toString()).append('\n');
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        String[] columns = new String[]{
+                "id",
+                "lat",
+                "lon",
+                "country",
+                "city",
+                "street",
+                "housenumber",
+                "postcode",
+                "name"
+        };
+        Utils.writeCSV(filename, columns, stationsNearBorder.stream().map(OverpassGasStation::toString).toList());
     }
 
     public List<AveragePrices> getPriceDataForGermanStations() {
@@ -155,25 +152,15 @@ public class StationsFinder {
     }
 
     public void writeDrivablePairsToFile() {
-
-        File filecsv = new File("output");
-        if (!filecsv.exists()) {
-            var _bool = filecsv.mkdir();
-        }
-
-        try {
-            filecsv = new File("output/AllPairsIn10Km.csv");
-            FileWriter fwcsv = new FileWriter(filecsv);
-            fwcsv.append("idFirstStation,idSecondStation,countryCodeFirst,countryCodeSecond," +
-                    "airDistance,drivingDistance,drivingTime\n");
-
-            for (GasStationPair pair : pairsInDrivableDistance) {
-                fwcsv.append(pair.toString()).append("\n");
-            }
-            fwcsv.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String[] columns = new String[]{
+                "idFirstStation",
+                "idSecondStation",
+                "countryCodeFirst",
+                "countryCodeSecond",
+                "airDistance",
+                "drivingDistance",
+                "drivingTime"
+        };
+        Utils.writeCSV("output/AllPairsIn10Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).toList());
     }
 }

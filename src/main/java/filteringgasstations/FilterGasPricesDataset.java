@@ -1,9 +1,9 @@
 package filteringgasstations;
 
 import com.opencsv.CSVReader;
-import filteringgasstations.stations.GasStationPair;
 import filteringgasstations.stations.GermanStation;
 import filteringgasstations.utils.PriceDatePair;
+import filteringgasstations.utils.Utils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -28,18 +28,9 @@ public class FilterGasPricesDataset {
     public static List<GermanStation> germanStations() {
         List<GermanStation> germanStations = new ArrayList<>();
         var file = ClassLoader.getSystemClassLoader().getResource("germanStations20Km.csv");
-
-        try {
-            assert file != null;
-            try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
-                String[] lineInArray;
-                while ((lineInArray = reader.readNext()) != null) {
-                    GermanStation temp = new GermanStation(lineInArray[0]);
-                    germanStations.add(temp);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (String[] line : Utils.readCSV(file)) {
+                GermanStation temp = new GermanStation(line[0]);
+                germanStations.add(temp);
         }
 
         System.out.println("German stations correctly imported");
@@ -50,21 +41,13 @@ public class FilterGasPricesDataset {
         for (int day = 10; day < 15; day++) {
             String fileName = "prices/germany/extra/2022-04-" + day + "-prices.csv";
             var file = ClassLoader.getSystemClassLoader().getResource(fileName);
-            try {
-                try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
-                    String[] lineInArray;
-                    reader.readNext();  // skip header
-                    while ((lineInArray = reader.readNext()) != null) {
-                        for (GermanStation i : germanStations) {
-                            if (i.id.equals(lineInArray[1])) {
-                                i.setLastPrice(Double.parseDouble(lineInArray[2]));
-                                break;
-                            }
-                        }
+            for (String[] line : Utils.readCSV(file)) {
+                for (GermanStation i : germanStations) {
+                    if (i.id.equals(line[1])) {
+                        i.setLastPrice(Double.parseDouble(line[2]));
+                        break;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         System.out.println("Prices of the 5 days before start OK");
@@ -75,25 +58,15 @@ public class FilterGasPricesDataset {
             for (int day = 1; day <= 31; day++) {
                 String fileName = "prices/germany/" + month + "/2022-" + String.format("%02d", month) + "-" + String.format("%02d", day) + "-prices.csv";
                 var file = ClassLoader.getSystemClassLoader().getResource(fileName);
-                if (file == null) continue;
-                try {
-                    try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
-                        String[] lineInArray;
-                        reader.readNext();  // skip header
-                        while ((lineInArray = reader.readNext()) != null) {
-                            for (GermanStation i : germanStations) {
-                                if (i.id.equals(lineInArray[1])) {
-                                    i.addTimeAndPrice(Time.valueOf(lineInArray[0].substring(11, 19)), Double.parseDouble(lineInArray[2]));
-                                    //System.out.println(i.timestamps.get(i.timestamps.size() - 1));
-                                    break;
-                                }
-                            }
+                for (String[] line : Utils.readCSV(file)) {
+                    for (GermanStation i : germanStations) {
+                        if (i.id.equals(line[1])) {
+                            i.addTimeAndPrice(Time.valueOf(line[0].substring(11, 19)), Double.parseDouble(line[2]));
+                            //System.out.println(i.timestamps.get(i.timestamps.size() - 1));
+                            break;
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-
                 //System.out.println(germanStations);
                 endDayProcedure(Date.valueOf("2022-" + String.format("%02d", month) + "-" + String.format("%02d", day)));
 
@@ -133,7 +106,7 @@ public class FilterGasPricesDataset {
     }
 
     public static void computeAveragePriceOfDay(GermanStation station, Date date) {
-        Double totalPrice = 0.0;
+        double totalPrice = 0.0;
         Double lastPrice = station.lastPrice;
         Time lastTime = Time.valueOf("06:00:00");
         for (int i = 0; i < station.timestamps.size(); i++) {
@@ -151,26 +124,12 @@ public class FilterGasPricesDataset {
     }
 
     public static void writeStationsAndAvgPrices() {
-
-        File filecsv = new File("output");
-        if (!filecsv.exists()) {
-            var _bool = filecsv.mkdir();
-        }
-
-        try {
-            filecsv = new File("output/allStationsAndAvgPricesDE.csv");
-            FileWriter fwcsv = new FileWriter(filecsv);
-            fwcsv.append("id,date,avgPrice\n");
-
-            for (GermanStation station : germanStations) {
-                for (PriceDatePair entry : station.avgPrices)
-                    fwcsv.append(station.id + "," + entry.date + "," + entry.avgPrice + "\n");
+        List<String> lines = new ArrayList<>();
+        for (GermanStation station : germanStations) {
+            for (PriceDatePair entry : station.avgPrices) {
+                lines.add(station.id + "," + entry.date + "," + entry.avgPrice);
             }
-            fwcsv.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
+        Utils.writeCSV("output/allStationsAndAvgPricesDE.csv", new String[]{"id", "date", "avgPrice"}, lines);
     }
-
 }

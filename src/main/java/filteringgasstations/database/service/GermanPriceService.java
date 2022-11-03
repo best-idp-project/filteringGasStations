@@ -35,4 +35,10 @@ public class GermanPriceService {
         return repository.getAllByStationAndDate(station, date);
     }
     public void purge() { repository.deleteAll(); }
+
+    public void saveAll(List<GermanPrice> prices) {
+        repository.saveAll(prices);
+    }
+
+    public List<String> getAllIds() { return repository.getIds(); }
 }

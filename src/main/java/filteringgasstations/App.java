@@ -56,10 +56,10 @@ public class App implements CommandLineRunner {
 
         DateTime start = new DateTime(2022, 4, 15, 0, 0, 0, 0);
         DateTime end = new DateTime(2022, 8, 15, 0, 0, 0, 0);
-        List<AveragePrices> stations = finder.getPriceDataForGermanStations();
-        while (end.isAfter(start)) {
-            start.plusDays(1);
-        }
+//        List<AveragePrices> stations = finder.getPriceDataForGermanStations();
+//        while (end.isAfter(start)) {
+//            start.plusDays(1);
+//        }
         System.out.println("bye");
         System.exit(0);
     }
