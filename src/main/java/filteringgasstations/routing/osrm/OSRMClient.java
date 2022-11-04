@@ -1,19 +1,13 @@
 package filteringgasstations.routing.osrm;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import filteringgasstations.database.models.OSRMCache;
 import filteringgasstations.database.service.OSRMCacheService;
-import filteringgasstations.routing.CachedRoute;
 import filteringgasstations.routing.Route;
 import filteringgasstations.stations.GasStationPair;
-import filteringgasstations.stations.Overpass;
 
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Optional;
@@ -24,16 +18,15 @@ public class OSRMClient {
 
     public static Route getRoute(OSRMCacheService cache, GasStationPair pair) {
         String uri = pair.getFirstStation().getLongitude() + "," + pair.getFirstStation().getLongitude() + ";"
-                + pair.getSecondStation().getLongitude() + "," + pair.getSecondStation().getLatitude() + "?overview=false";
+                + pair.getSecondStation().getLongitude() + "," + pair.getSecondStation().getLatitude();
         Optional<OSRMCache> hit = cache.get(uri);
         if (hit.isPresent()) {
-            System.out.println("cache hit");
             return hit.get();
         }
-        String target = URL + uri;
+        String target = URL + uri  + "?overview=false";
         System.out.println(target);
         try {
-            int status = 0;
+            int status;
             HttpURLConnection connection;
             java.net.URL url = new URL(target);
             do {
