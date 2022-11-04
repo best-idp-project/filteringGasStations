@@ -1,9 +1,9 @@
 package filteringgasstations.database.models;
 
 import filteringgasstations.routing.Route;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity(name = "osrm_caches")
@@ -26,7 +26,7 @@ public class OSRMCache implements Route {
         this.id = id;
     }
 
-    @javax.persistence.Id
+    @Id
     public String getId() {
         return id;
     }

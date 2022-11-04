@@ -3,7 +3,6 @@ package filteringgasstations;
 import com.opencsv.CSVReader;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.stations.ForeignPriceEntry;
-import filteringgasstations.stations.GasStationPair;
 import filteringgasstations.stations.GermanStation;
 import filteringgasstations.utils.PriceDatePair;
 import org.apache.commons.lang3.time.DateUtils;
