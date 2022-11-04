@@ -40,7 +40,8 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //Utils.readGermanPrices(germanPriceService);
+        Utils.readGermanPrices(germanPriceService);
+        System.exit(0);
         StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, germanPriceService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
