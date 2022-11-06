@@ -21,8 +21,8 @@ public class GasStationPair {
 
     @Override
     public String toString() {
-        return "\"" + firstStation.id + "\"," +
-                "\"" + secondStation.id + "\"," +
+        return firstStation.id + "," +
+                secondStation.id + "," +
                 countryCodeFirst + "," + countryCodeSecond + "," +
                 airDistance + "," +
                 drivingDistance + "," +

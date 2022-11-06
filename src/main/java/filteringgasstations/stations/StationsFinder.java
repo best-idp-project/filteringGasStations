@@ -9,9 +9,6 @@ import filteringgasstations.routing.Route;
 import filteringgasstations.routing.osrm.OSRMClient;
 import filteringgasstations.utils.Utils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,11 +94,11 @@ public class StationsFinder {
     public void writeStationsOfInterestToFile(StationOfInterestService stationOfInterestService) {
         String filename = "output/gasStationsRange".concat(String.valueOf((int) this.BORDER_LIMIT)).concat(".csv");
         Arrays.stream(CountryCode.values()).forEach(country -> {
-                    List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new ArrayList<>());
+                    List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new CopyOnWriteArrayList<>());
+                    List<StationOfInterest> savedStations = stationOfInterestService.getAllByCountry(country);
                     AtomicInteger countryStations = new AtomicInteger(0);
-                    countryGasList.forEach(station -> {
-                        assert station.getAddress().getCountry() != null;
-                        Optional<StationOfInterest> ofInterest = stationOfInterestService.get(station.id);
+                    countryGasList.stream().filter(station -> station.getAddress().getCountry() != null).forEach(station -> {
+                        Optional<StationOfInterest> ofInterest = savedStations.stream().filter(stationOfInterest -> stationOfInterest.getId().equals(station.getId())).findFirst();
                         if (ofInterest.isPresent()) {
                             StationOfInterest stationOfInterest = ofInterest.get();
                             if (stationOfInterest.getBorderDistance() < this.BORDER_LIMIT) {
@@ -125,6 +122,9 @@ public class StationsFinder {
                     System.out.println(country.getName() + ": " + countryStations.get() + " gas stations inside " + this.BORDER_LIMIT + "km");
                 }
         );
+        var stations = stationsNearBorder.stream().sorted(Comparator.comparing(GasStation::getId)).toList();
+        stationsNearBorder.clear();
+        stationsNearBorder.addAll(stations);
 
         String[] columns = new String[]{
                 "id",
@@ -161,6 +161,6 @@ public class StationsFinder {
                 "drivingDistance",
                 "drivingTime"
         };
-        Utils.writeCSV("output/AllPairsIn10Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).toList());
+        Utils.writeCSV("output/allPairsIn10Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
     }
 }
