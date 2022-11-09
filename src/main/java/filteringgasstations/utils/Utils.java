@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Utils {
@@ -229,7 +228,7 @@ public class Utils {
         }
     }
 
-    public static List<String[]> readCSV(URL file) {
+    public static List<String[]> readCSV(URL file, boolean removeHeader) {
         List<String[]> lines = new ArrayList<>();
         try {
             if (file == null) {
@@ -237,7 +236,9 @@ public class Utils {
             }
             try (CSVReader reader = new CSVReader(new FileReader(file.getPath()))) {
                 String[] line;
-                reader.readNext();  // skip the header
+                if (removeHeader) {
+                    reader.readNext();
+                }
                 while ((line = reader.readNext()) != null) {
                     lines.add(line);
                 }
@@ -246,5 +247,9 @@ public class Utils {
             e.printStackTrace();
         }
         return lines;
+    }
+
+    public static List<String[]> readCSV(URL file) {
+        return readCSV(file, true);
     }
 }

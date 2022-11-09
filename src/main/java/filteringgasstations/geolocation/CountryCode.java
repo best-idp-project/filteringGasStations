@@ -25,4 +25,9 @@ public enum CountryCode {
         this.name = name;
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return code;
+    }
 }
