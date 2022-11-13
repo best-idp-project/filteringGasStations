@@ -1,20 +1,12 @@
 package filteringgasstations;
 
 import filteringgasstations.database.service.*;
-import filteringgasstations.stations.AveragePrices;
-import filteringgasstations.stations.GasStation;
-import filteringgasstations.stations.OverpassGasStation;
 import filteringgasstations.stations.StationsFinder;
-import filteringgasstations.utils.Utils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -31,6 +23,9 @@ public class App implements CommandLineRunner {
     private BorderPointService borderPointService;
     @Autowired
     private StationOfInterestService stationOfInterestService;
+
+    @Autowired
+    private CompetitorsService competitorsService;
     public static final int RANGE_KM = 20; // select the range
     public static final double DIRECT_DISTANCE_LIMIT = 10.;
 
@@ -42,7 +37,7 @@ public class App implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //Utils.readGermanPrices(germanPriceService);
         //System.exit(0);
-        StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, germanPriceService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
+        StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, germanPriceService, competitorsService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
         System.out.println("Stations inside range of " + RANGE_KM + "km");

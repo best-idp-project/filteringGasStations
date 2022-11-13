@@ -1,37 +1,42 @@
 package filteringgasstations;
 
 
-import com.opencsv.CSVReader;
+import filteringgasstations.database.models.ForeignAveragePrice;
+import filteringgasstations.database.models.GermanAveragePrice;
+import filteringgasstations.database.service.ForeignAveragePriceService;
+import filteringgasstations.database.service.GermanAveragePriceService;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.stations.ForeignPriceEntry;
 import filteringgasstations.stations.GermanStation;
 import filteringgasstations.utils.PriceDatePair;
 import filteringgasstations.utils.Utils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.FileReader;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-public class FilterGasPricesDataset {
+
+@SpringBootApplication
+public class FilterGasPricesDataset implements CommandLineRunner {
+
+    @Autowired
+    private GermanAveragePriceService germanAveragePriceService;
+
+    @Autowired
+    private ForeignAveragePriceService foreignAveragePriceService;
     private static final int ONE_WEEK = 604800000;
     static List<GermanStation> germanStations;
-
-    public static void main(String[] args) {
-        germanStations = germanStations();
-        // FOR GERMAN STATIONS
-        readPricesSomeDaysBeforeStart();
-        readAllDaysPrices();
-        writeStationsAndAvgPricesDE();
-
-        // FOR FOREIGN STATIONS
-        writeStationsAndAvgPricesFOREIGN();
-    }
 
     public static CopyOnWriteArrayList<GermanStation> germanStations() {
         var file = ClassLoader.getSystemClassLoader().getResource("germanStations20Km.csv");
@@ -84,8 +89,9 @@ public class FilterGasPricesDataset {
             if (station.avgPrices.get(station.avgPrices.size() - 1).avgPrice == 0.0) {
                 zeroStations.getAndIncrement();
                 germanStations.remove(station);
-            } else
-                System.out.println(station.id + " " + station.avgPrices);
+            } else {
+                //System.out.println(station.id + " " + station.avgPrices);
+            }
         });
         //System.out.println("missing prices counter: " + zeroStations.get());
 
@@ -129,17 +135,24 @@ public class FilterGasPricesDataset {
         station.avgPrices.add(new PriceDatePair(avgPrice, date));
     }
 
-    public static void writeStationsAndAvgPricesDE() {
+    public static void writeStationsAndAvgPricesDE(GermanAveragePriceService germanAveragePriceService) {
         String filename = "output/allStationsAndAvgPricesDE.csv";
         String[] columns = new String[]{
                 "id",
                 "date",
                 "avgPrice"
         };
-        List<String> lines = new ArrayList<>();
+        List<String> lines = new CopyOnWriteArrayList<>();
+        Set<String> ids = new HashSet<>(germanAveragePriceService.getAllIds());
         germanStations.forEach(germanStation ->
-                germanStation.avgPrices.stream().filter(priceDatePair -> priceDatePair.date.after(Date.valueOf("2022-04-14"))).forEach(priceDatePair ->
-                        lines.add(germanStation.id + "," + priceDatePair.date + "," + priceDatePair.avgPrice)));
+                germanStation.avgPrices.stream().filter(priceDatePair -> priceDatePair.date.after(Date.valueOf("2022-04-14"))).parallel().forEach(
+                        priceDatePair -> {
+                            var entry = new GermanAveragePrice(germanStation.id, priceDatePair.date, priceDatePair.avgPrice);
+                            if (!ids.contains(entry.getId())) {
+                                germanAveragePriceService.save(entry);
+                            }
+                            lines.add(germanStation.id + "," + priceDatePair.date + "," + priceDatePair.avgPrice);
+                        }));
         Utils.writeCSV(filename, columns, lines);
         System.out.println("All stations and avg prices for DE done");
 
@@ -153,7 +166,7 @@ public class FilterGasPricesDataset {
         return foreignPriceDataset;
     }
 
-    public static void writeStationsAndAvgPricesFOREIGN() {
+    public void writeStationsAndAvgPricesFOREIGN() {
         List<ForeignPriceEntry> foreignPriceDataset = readForeignPriceDataset();
         String filename = "output/allStationsAndAvgPricesFOREIGN.csv";
         String[] columns = new String[]{
@@ -167,7 +180,8 @@ public class FilterGasPricesDataset {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         final Date start = Date.valueOf("2022-04-15");
         final Date end = Date.valueOf("2022-10-15");
-        Utils.readCSV(file).forEach(line -> {
+        Set<String> ids = new HashSet<>(foreignAveragePriceService.getAllIds());
+        Utils.readCSV(file).parallelStream().forEach(line -> {
             for (ForeignPriceEntry entry : foreignPriceDataset) {
                 // find the first entry in foreign_petrol_prices.csv with same country code
                 if (entry.countryCode == CountryCode.valueOf(line[1]))
@@ -175,10 +189,30 @@ public class FilterGasPricesDataset {
                     for (java.util.Date date = entry.date; date.before(new Date(entry.date.getTime() + ONE_WEEK)); date = DateUtils.addDays(date, 1)) {
                         if (date.before(start) || date.after(end))
                             continue;
-                        lines.add(line[0] + "," + dateFormat.format(date) + "," + entry.price);
+                        ForeignAveragePrice pr = new ForeignAveragePrice(line[0], date, entry.price);
+                        if (!ids.contains(pr.getId())) {
+                            foreignAveragePriceService.save(pr);
+                        }
+                        //lines.add(line[0] + "," + dateFormat.format(date) + "," + entry.price);
                     }
             }
         });
         Utils.writeCSV(filename, columns, lines);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(FilterGasPricesDataset.class, args);
+    }
+    @Override
+    public void run(String... args) throws Exception {
+        germanStations = germanStations();
+        // FOR GERMAN STATIONS
+        //readPricesSomeDaysBeforeStart();
+        //readAllDaysPrices();
+        //writeStationsAndAvgPricesDE(germanAveragePriceService);
+
+        // FOR FOREIGN STATIONS
+        writeStationsAndAvgPricesFOREIGN();
+        System.exit(0);
     }
 }
