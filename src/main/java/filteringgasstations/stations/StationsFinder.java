@@ -1,6 +1,7 @@
 package filteringgasstations.stations;
 
 import filteringgasstations.App;
+import filteringgasstations.database.models.Competitors;
 import filteringgasstations.database.models.StationOfInterest;
 import filteringgasstations.database.service.*;
 import filteringgasstations.geolocation.BorderPoint;
@@ -27,14 +28,17 @@ public class StationsFinder {
     private GermanPriceService germanPriceService;
 
     private BorderPointService borderPointService;
+
+    private CompetitorsService competitorsService;
     private HashMap<CountryCode, List<OverpassGasStation>> allStations;
     private List<GasStationPair> pairsInDrivableDistance = new ArrayList<>();
 
-    public StationsFinder(OSRMCacheService osrmCacheService, InputFileService inputFileService, BorderPointService borderPointService, GermanPriceService germanPriceService, double directDistanceLimit, double borderLimit) {
+    public StationsFinder(OSRMCacheService osrmCacheService, InputFileService inputFileService, BorderPointService borderPointService, GermanPriceService germanPriceService, CompetitorsService competitorsService, double directDistanceLimit, double borderLimit) {
         this.osrmCacheService = osrmCacheService;
         this.inputFileService = inputFileService;
         this.germanPriceService = germanPriceService;
         this.DIRECT_DISTANCE_LIMIT = directDistanceLimit;
+        this.competitorsService = competitorsService;
         this.BORDER_LIMIT = borderLimit;
 
         boolean hasChanged = Utils.hasBorderChanged(inputFileService);
@@ -76,6 +80,7 @@ public class StationsFinder {
                     pair.setDrivingTime(distances.getDrivingTime());
                     System.out.println(Thread.currentThread().getName() + ": http req #: " + counter.incrementAndGet() + "/" + pairs.size());
                 }
+
                 return pair;
             }, executorService);
             futures.add(job);
@@ -87,7 +92,6 @@ public class StationsFinder {
                 return null;
             }
         }).filter(Objects::nonNull).collect(Collectors.toList());
-
         System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <= " + App.DIRECT_DISTANCE_LIMIT + " km");
     }
 
@@ -161,6 +165,13 @@ public class StationsFinder {
                 "drivingDistance",
                 "drivingTime"
         };
+        Set<String> ids = new HashSet<>(competitorsService.getIds());
+        Set<String> finalIds = ids;
+        List<Competitors> competitors = pairsInDrivableDistance
+                .stream()
+                .map(Competitors::fromGasStationPair).toList();
+        competitors.stream().filter(p -> !finalIds.contains(p.getId())).parallel().forEach(competitorsService::save);
+        ids = new HashSet<>(competitorsService.getIds());
         Utils.writeCSV("output/allPairsIn10Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
     }
 }

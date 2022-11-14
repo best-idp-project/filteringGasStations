@@ -48,4 +48,12 @@ public class GasStationPair {
     public Double getAirDistance() {
         return airDistance;
     }
+
+    public Double getDrivingDistance() {
+        return drivingDistance;
+    }
+
+    public Double getDrivingTime() {
+        return drivingTime;
+    }
 }
