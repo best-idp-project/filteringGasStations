@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * #AndreasReview
+ * In order to not DDOS the OSRM server we cache the routes that we have already calculated forever in the database.
  */
 @Entity(name = "osrm_caches")
 @Table

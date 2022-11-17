@@ -5,7 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * #AndreasReview
+ * We store the stations with their country in the database with their distance to the closest border point to quickly
+ * get all the stations in a country in a certain radius.
  */
 @Entity(name = "stations_of_interest")
 @Table

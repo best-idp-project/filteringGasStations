@@ -1,7 +1,7 @@
 package filteringgasstations.routing.osrm;
 
 /**
- * #AndreasReview
+ * To cleanly parse the OSRM response we need a class which represents a waypoint. Not needed elsewhere
  */
 public class OSRMWaypoint {
 

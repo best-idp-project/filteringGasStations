@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * #AndreasReview
+ * For easier access later, we store the foreign average prices in a separate table in the database.
  */
 @Entity(name = "foreign_average_prices")
 @Table(indexes = {@Index(name = "foreign_average_station_index", columnList = "station")})

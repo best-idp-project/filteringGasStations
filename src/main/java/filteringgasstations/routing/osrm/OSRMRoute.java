@@ -1,10 +1,9 @@
 package filteringgasstations.routing.osrm;
 
 import com.google.gson.annotations.SerializedName;
-import filteringgasstations.routing.Route;
 
 /**
- * #AndreasReview
+ * Object that we use to parse the response from the OSRM server, contains the driving distance and duration
  */
 public class OSRMRoute {
 

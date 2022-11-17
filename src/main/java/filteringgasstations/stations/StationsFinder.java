@@ -162,22 +162,6 @@ public class StationsFinder {
     }
 
     /**
-     * #AndreasReview
-     *
-     * @return
-     */
-    public List<AveragePrices> getPriceDataForGermanStations() {
-        List<AveragePrices> priceData = new ArrayList<>();
-        for (OverpassGasStation station : stationsNearBorder) {
-            if (station.getAddress().getCountry().equals(CountryCode.GER)) {
-                var data = germanPriceService.getAllByStation(station.id);
-                priceData.add(new AveragePrices(station, data));
-            }
-        }
-        return priceData;
-    }
-
-    /**
      * Write all pair of stations that have a distance below DIRECT_DISTANCE_LIMIT to file
      */
     public void writeDrivablePairsToFile() {

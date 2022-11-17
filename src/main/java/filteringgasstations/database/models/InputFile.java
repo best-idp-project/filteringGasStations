@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 /**
- * #AndreasReview
+ * Attempt to see if we need to evaluate the file again. Could be removed in the future.
  */
 @Entity(name = "input_files")
 @Table

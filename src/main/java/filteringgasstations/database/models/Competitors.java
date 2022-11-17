@@ -9,7 +9,9 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 
 /**
- * #AndreasReview
+ * This class represents an entry in the database and contains
+ * the data needed to create a competitor correlation between stations with the distance between them
+ * and the driving time needed to reach the competitor.
  */
 @Entity(name = "competitors")
 @Table(indexes = {@Index(name = "first_station_index", columnList = "firstStation"), @Index(name = "second_station_index", columnList = "secondStation")})

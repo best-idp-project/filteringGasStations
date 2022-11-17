@@ -2,14 +2,16 @@ package filteringgasstations.database.models;
 
 import com.google.gson.annotations.SerializedName;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * #AndreasReview
+ * Currently not really needed, but in order to be able to quickly gather all the prices that we have for one
+ * station we stored them in a separate table.
  */
 @Entity(name = "german_prices")
 @Table(indexes = {@Index(name = "station_index", columnList = "station")})

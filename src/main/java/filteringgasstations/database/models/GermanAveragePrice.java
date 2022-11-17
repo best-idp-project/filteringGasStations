@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * #AndreasReview
+ * The german average prices are stored in the database and contain the station they represent, the date and the average price.
+ * With this datapoint we can compare the prices of the station to the average price of its competitors in a later stage of the project.
  */
 @Entity(name = "german_average_prices")
 @Table(indexes = {@Index(name = "average_station_index", columnList = "station")})
