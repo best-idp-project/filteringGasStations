@@ -30,10 +30,12 @@ public class Utils {
 
     /**
      * Calculate distance between two points in latitude and longitude
-     * <p>
-     * lat1, lon1 Start point lat2, lon2 End point
      *
-     * @return Distance in Kilometers
+     * @param lat1 latitude of start point
+     * @param lat2 latitude of end point
+     * @param lon1 longitude of start point
+     * @param lon2 longitude of end point
+     * @return air distance between two points (km)
      */
     public static double distance(double lat1, double lat2, double lon1,
                                   double lon2) {
@@ -53,6 +55,13 @@ public class Utils {
         return Math.sqrt(distance) / 1000;
     }
 
+    /**
+     * Helper which reads all gas stations from a file and stores it in a list
+     *
+     * @param inputFileService
+     * @param country          country code
+     * @return list of gas stations read from the file
+     */
     public static List<OverpassGasStation> readCountryGasStationsJSON(InputFileService inputFileService, CountryCode country) {
         Type OVERPASS_TYPE = new TypeToken<Overpass>() {
         }.getType();
@@ -71,11 +80,24 @@ public class Utils {
         return Collections.emptyList();
     }
 
+    /**
+     * Check if the border file changed
+     *
+     * @param inputFileService
+     * @return true if changed, false otherwise
+     */
     public static boolean hasBorderChanged(InputFileService inputFileService) {
         String filename = "borders_germany.json";
         return hasFileChanged(inputFileService, filename);
     }
 
+    /**
+     * Check if a file has changed compared to the cached version
+     *
+     * @param inputFileService
+     * @param filename         name of the file
+     * @return true if changed, false otherwise
+     */
     public static boolean hasFileChanged(InputFileService inputFileService, String filename) {
         var file = ClassLoader.getSystemClassLoader().getResource(filename);
         assert file != null;
@@ -85,6 +107,13 @@ public class Utils {
         return storedSum.map(inputFile -> !inputFile.getHashsum().equals(checksum.get())).orElse(true);
     }
 
+    /**
+     * Read all points of the german border
+     *
+     * @param inputFileService
+     * @param borderPointService
+     * @return a list of border points in lat/lon
+     */
     public static List<BorderPoint> readGermanBorder(InputFileService inputFileService, BorderPointService borderPointService) {
         List<BorderPoint> points = new ArrayList<>();
         String filename = "borders_germany.json";
@@ -120,6 +149,12 @@ public class Utils {
         return points;
     }
 
+    /**
+     * Read gas stations for all countries (except DE), store everything in a hashmap
+     *
+     * @param inputFileService
+     * @return hashmap with list of station for every country
+     */
     public static HashMap<CountryCode, List<OverpassGasStation>> readGasStationsForEachCountry(InputFileService inputFileService) {
         HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
         for (CountryCode countryCode : CountryCode.values()) {
@@ -136,6 +171,11 @@ public class Utils {
         return allStations;
     }
 
+    /**
+     * Separate read for german stations (different source)
+     *
+     * @return
+     */
     public static List<OverpassGasStation> readGermanStations() {
         List<OverpassGasStation> germanStations = new ArrayList<>();
         var file = ClassLoader.getSystemClassLoader().getResource("stations_germany.csv");
@@ -198,6 +238,11 @@ public class Utils {
         return prices;
     }
 
+    /**
+     * Create directory in the project with a certain name
+     *
+     * @param name
+     */
     public static void createDirectory(String name) {
         try {
             Path parent = Path.of(name).getParent();
@@ -207,6 +252,13 @@ public class Utils {
         }
     }
 
+    /**
+     * Helper which writes a csv file with a certain path, columns and lines
+     *
+     * @param filepath output file path
+     * @param columns  attributes name
+     * @param lines    entries to write
+     */
     public static void writeCSV(String filepath, String[] columns, List<String> lines) {
         createDirectory(filepath);
 
@@ -228,6 +280,13 @@ public class Utils {
         }
     }
 
+    /**
+     * Helper which reads a file (with or without header)
+     *
+     * @param file         path of the file
+     * @param removeHeader keep or remove header boolean
+     * @return list of string read from the csv file
+     */
     public static List<String[]> readCSV(URL file, boolean removeHeader) {
         List<String[]> lines = new ArrayList<>();
         try {

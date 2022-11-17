@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Class representing a single point of the german border
+ */
 @Entity(name = "borderpoints")
 @Table
 public class BorderPoint {
@@ -12,6 +15,12 @@ public class BorderPoint {
     private double latitude = 0.0;
     private double longitude = 0.0;
 
+    /**
+     * Border point constructor
+     *
+     * @param latitude
+     * @param longitude
+     */
     public BorderPoint(double latitude, double longitude) {
         this.id = latitude + "_" + longitude;
         this.latitude = latitude;
@@ -21,6 +30,7 @@ public class BorderPoint {
     public BorderPoint() {
 
     }
+
     @Id
     public String getId() {
         return id;

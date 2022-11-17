@@ -2,6 +2,10 @@ package filteringgasstations.stations;
 
 import filteringgasstations.geolocation.CountryCode;
 
+/**
+ * Gas station address which includes country, city, street, housenumber, postcode, name
+ * Not all those fields are often available (nil). Country and name are always present
+ */
 public class GasStationAddress {
     CountryCode country;
     String city;

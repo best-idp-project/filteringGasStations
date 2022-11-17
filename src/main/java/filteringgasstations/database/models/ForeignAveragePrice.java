@@ -9,8 +9,11 @@ import javax.persistence.Table;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * #AndreasReview
+ */
 @Entity(name = "foreign_average_prices")
-@Table(indexes = { @Index(name = "foreign_average_station_index", columnList = "station")})
+@Table(indexes = {@Index(name = "foreign_average_station_index", columnList = "station")})
 public class ForeignAveragePrice {
 
     private String id;

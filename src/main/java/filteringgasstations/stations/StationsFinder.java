@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 
 import static filteringgasstations.utils.Utils.distance;
 
-
+/**
+ * Class which incorporates all the logic related to station, distances, pairs
+ */
 public class StationsFinder {
     private final CopyOnWriteArrayList<OverpassGasStation> stationsNearBorder = new CopyOnWriteArrayList<>();
     private final double DIRECT_DISTANCE_LIMIT;
@@ -47,6 +49,14 @@ public class StationsFinder {
         allStations.put(CountryCode.GER, Utils.readGermanStations());
     }
 
+    /**
+     * Get all pairs of stations where the air distance is below a threshold
+     * The pairs must be between two german stations or one german and one foreign station
+     *
+     * @param stations      list of all stations that have a distance below BORDER_LIMIT from the border
+     * @param distanceLimit the threshold for the distance between each other
+     * @return the list of station pairs
+     */
     private static List<GasStationPair> getPairsOfInterest(List<OverpassGasStation> stations, double distanceLimit) {
         List<GasStationPair> pairs = new ArrayList<>();
         for (int fromIndex = 0; fromIndex < stations.size(); fromIndex++) {
@@ -66,7 +76,9 @@ public class StationsFinder {
         return pairs;
     }
 
-
+    /**
+     * Http request to get the driving time and distance between all stations
+     */
     public void calculateDistancesBetweenStations() {
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
         var pairs = getPairsOfInterest(stationsNearBorder, this.DIRECT_DISTANCE_LIMIT);
@@ -95,6 +107,11 @@ public class StationsFinder {
         System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <= " + App.DIRECT_DISTANCE_LIMIT + " km");
     }
 
+    /**
+     * Write all countries' gas stations within BORDER_LIMIT km from the german border
+     *
+     * @param stationOfInterestService the stations
+     */
     public void writeStationsOfInterestToFile(StationOfInterestService stationOfInterestService) {
         String filename = "output/gasStationsRange".concat(String.valueOf((int) this.BORDER_LIMIT)).concat(".csv");
         Arrays.stream(CountryCode.values()).forEach(country -> {
@@ -144,6 +161,11 @@ public class StationsFinder {
         Utils.writeCSV(filename, columns, stationsNearBorder.stream().map(OverpassGasStation::toString).toList());
     }
 
+    /**
+     * #AndreasReview
+     *
+     * @return
+     */
     public List<AveragePrices> getPriceDataForGermanStations() {
         List<AveragePrices> priceData = new ArrayList<>();
         for (OverpassGasStation station : stationsNearBorder) {
@@ -155,6 +177,9 @@ public class StationsFinder {
         return priceData;
     }
 
+    /**
+     * Write all pair of stations that have a distance below DIRECT_DISTANCE_LIMIT to file
+     */
     public void writeDrivablePairsToFile() {
         String[] columns = new String[]{
                 "idFirstStation",
@@ -172,6 +197,6 @@ public class StationsFinder {
                 .map(Competitors::fromGasStationPair).toList();
         competitors.stream().filter(p -> !finalIds.contains(p.getId())).parallel().forEach(competitorsService::save);
         ids = new HashSet<>(competitorsService.getIds());
-        Utils.writeCSV("output/allPairsIn10Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
+        Utils.writeCSV("output/allPairsIn" + DIRECT_DISTANCE_LIMIT + "Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
     }
 }

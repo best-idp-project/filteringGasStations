@@ -4,6 +4,9 @@ import filteringgasstations.geolocation.CountryCode;
 
 import java.util.HashMap;
 
+/**
+ * Intermediate object used as scheme to parse Overpass station files
+ */
 public class OverpassGasStation extends GasStation {
 
     public String type;

@@ -35,8 +35,6 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //Utils.readGermanPrices(germanPriceService);
-        //System.exit(0);
         StationsFinder finder = new StationsFinder(osrmCacheService, inputFileService, borderPointService, germanPriceService, competitorsService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
@@ -45,9 +43,12 @@ public class App implements CommandLineRunner {
 
         System.out.println();
         System.out.println("Calculating distances between stations");
+        // Calculate all possible pairs and for each calculate the driving time and distance
         finder.calculateDistancesBetweenStations();
 
         System.out.println("Write valid pairs");
+        // Write all valid pairs to file
+        // (dFirstStation,idSecondStation,countryCodeFirst,countryCodeSecond,airDistance,drivingDistance,drivingTime)
         finder.writeDrivablePairsToFile();
 
         DateTime start = new DateTime(2022, 4, 15, 0, 0, 0, 0);

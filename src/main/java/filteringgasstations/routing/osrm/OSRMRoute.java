@@ -3,6 +3,9 @@ package filteringgasstations.routing.osrm;
 import com.google.gson.annotations.SerializedName;
 import filteringgasstations.routing.Route;
 
+/**
+ * #AndreasReview
+ */
 public class OSRMRoute {
 
     private OSRMLeg[] legs;

@@ -8,8 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+/**
+ * #AndreasReview
+ */
 @Entity(name = "competitors")
-@Table(indexes = { @Index(name = "first_station_index", columnList = "firstStation"), @Index(name = "second_station_index", columnList = "secondStation")})
+@Table(indexes = {@Index(name = "first_station_index", columnList = "firstStation"), @Index(name = "second_station_index", columnList = "secondStation")})
 public class Competitors {
 
     private String id;

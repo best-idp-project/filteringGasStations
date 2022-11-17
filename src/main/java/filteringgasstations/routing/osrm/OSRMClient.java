@@ -12,10 +12,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Optional;
 
+/**
+ * OSMR http://project-osrm.org/
+ * Routing engine for shortest paths in road network
+ */
 public class OSRMClient {
 
     private static final String URL = "http://router.project-osrm.org/route/v1/driving/";
 
+    /**
+     * Method that calls the routing API to get driving time and distances, if these info are not already cached
+     *
+     * @param cache to check if the route is already cached
+     * @param pair  which we want to calculate distances
+     * @return the route that connects the two station
+     */
     public static Route getRoute(OSRMCacheService cache, GasStationPair pair) {
         String uri = pair.getFirstStation().getLongitude() + "," + pair.getFirstStation().getLongitude() + ";"
                 + pair.getSecondStation().getLongitude() + "," + pair.getSecondStation().getLatitude();
@@ -23,7 +34,7 @@ public class OSRMClient {
         if (hit.isPresent()) {
             return hit.get();
         }
-        String target = URL + uri  + "?overview=false";
+        String target = URL + uri + "?overview=false";
         System.out.println(target);
         try {
             int status;

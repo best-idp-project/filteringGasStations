@@ -8,8 +8,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * #AndreasReview
+ */
 @Entity(name = "german_prices")
-@Table(indexes = { @Index(name = "station_index", columnList = "station")})
+@Table(indexes = {@Index(name = "station_index", columnList = "station")})
 public class GermanPrice {
 
     private String id;

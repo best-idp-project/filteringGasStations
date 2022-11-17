@@ -13,6 +13,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
+/**
+ * #AndreasReview
+ */
 @Entity(name = "input_files")
 @Table
 public class InputFile {

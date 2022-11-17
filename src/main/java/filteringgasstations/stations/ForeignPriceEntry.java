@@ -4,6 +4,9 @@ import filteringgasstations.geolocation.CountryCode;
 
 import java.sql.Date;
 
+/**
+ * Object which represents a single entry of the foreign price dataset
+ */
 public class ForeignPriceEntry {
     public CountryCode countryCode;
     public Date date;

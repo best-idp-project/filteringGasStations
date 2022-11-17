@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * #AndreasReview
+ */
 @Entity(name = "stations_of_interest")
 @Table
 public class StationOfInterest {

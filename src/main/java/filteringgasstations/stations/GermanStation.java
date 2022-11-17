@@ -5,7 +5,10 @@ import filteringgasstations.utils.PriceDatePair;
 import java.sql.Time;
 import java.util.ArrayList;
 
-
+/**
+ * German station with id, all (date, avgprice) pairs, lastprice (for the avg calculation) and all new price entries
+ * stored as timestamps/prices.
+ */
 public class GermanStation {
     public final String id;
     public ArrayList<PriceDatePair> avgPrices = new ArrayList<>();

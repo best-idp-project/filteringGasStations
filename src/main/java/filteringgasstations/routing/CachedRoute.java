@@ -1,5 +1,8 @@
 package filteringgasstations.routing;
 
+/**
+ * A single route cached in the db
+ */
 public class CachedRoute implements Route {
 
     double drivingTime;

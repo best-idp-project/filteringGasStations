@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * #AndreasReview
+ */
 @Entity(name = "osrm_caches")
 @Table
 public class OSRMCache implements Route {

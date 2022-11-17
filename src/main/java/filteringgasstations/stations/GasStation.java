@@ -2,6 +2,9 @@ package filteringgasstations.stations;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Gas station object with id, lat, lon, address
+ */
 public class GasStation {
     public final String id;
     @SerializedName(value = "latitude", alternate = "lat")

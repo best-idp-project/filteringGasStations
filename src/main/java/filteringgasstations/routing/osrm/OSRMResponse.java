@@ -4,6 +4,9 @@ import filteringgasstations.routing.Route;
 
 import java.util.Arrays;
 
+/**
+ * Parse the json answer from the API to get the driving distance and time
+ */
 public class OSRMResponse implements Route {
 
     private String code;

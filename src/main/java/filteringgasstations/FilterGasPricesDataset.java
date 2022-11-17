@@ -35,9 +35,15 @@ public class FilterGasPricesDataset implements CommandLineRunner {
 
     @Autowired
     private ForeignAveragePriceService foreignAveragePriceService;
-    private static final int ONE_WEEK = 604800000;
+    private static final int ONE_WEEK = 604800000; // how many ms in one week
+    private static final int ONE_DAY_6_22 = 57600; // how many sec in a day of anaysis
     static List<GermanStation> germanStations;
 
+    /**
+     * Read all german stations within 20 km from the border
+     *
+     * @return a list of german stations
+     */
     public static CopyOnWriteArrayList<GermanStation> germanStations() {
         var file = ClassLoader.getSystemClassLoader().getResource("germanStations20Km.csv");
         List<GermanStation> germanStations = Utils.readCSV(file).stream().map(line -> new GermanStation(line[0])).toList();
@@ -45,6 +51,10 @@ public class FilterGasPricesDataset implements CommandLineRunner {
         return new CopyOnWriteArrayList<>(germanStations);
     }
 
+    /**
+     * Read all german prices entry of the 15 days before the start of the analysis to be sure of having a starting price
+     * the first day (and not a nil).
+     */
     public static void readPricesSomeDaysBeforeStart() {
         for (int day = 1; day < 15; day++) {
             String fileName = "prices/germany/extra/2022-04-" + String.format("%02d", day) + "-prices.csv";
@@ -60,6 +70,12 @@ public class FilterGasPricesDataset implements CommandLineRunner {
         }
         System.out.println("Prices of the 15 days before start OK");
     }
+
+    /**
+     * Read all price entries for all the days of the analysis (between April 15 and October 15)
+     * and store for every station the corresponding entries.
+     * At the end of every day call the endDayProcedure to calculate the avg price
+     */
     public static void readAllDaysPrices() {
         for (int month = 4; month <= 10; month++) {
             for (int day = 1; day <= 31; day++) {
@@ -73,7 +89,6 @@ public class FilterGasPricesDataset implements CommandLineRunner {
                     for (GermanStation station : germanStations) {
                         if (station.id.equals(line[1])) {
                             station.addTimeAndPrice(Time.valueOf(line[0].substring(11, 19)), Double.parseDouble(line[2]));
-                            //System.out.println(i.timestamps.get(i.timestamps.size() - 1));
                             break;
                         }
                     }
@@ -89,14 +104,17 @@ public class FilterGasPricesDataset implements CommandLineRunner {
             if (station.avgPrices.get(station.avgPrices.size() - 1).avgPrice == 0.0) {
                 zeroStations.getAndIncrement();
                 germanStations.remove(station);
-            } else {
-                //System.out.println(station.id + " " + station.avgPrices);
             }
         });
-        //System.out.println("missing prices counter: " + zeroStations.get());
 
     }
 
+    /**
+     * For each station and a specific day, calculate avg price of the day based on the store price entries
+     * and then clear the price entries for the station (ready for the next day)
+     *
+     * @param date the day we want to calculate the avg price
+     */
     public static void endDayProcedure(Date date) {
         germanStations.forEach(station -> {
             if (station.prices.size() == 0) {
@@ -115,6 +133,15 @@ public class FilterGasPricesDataset implements CommandLineRunner {
         });
     }
 
+    /**
+     * Given a station and a date, compute the average using the lastPrice (initial price of the day)
+     * and all the entries of the day.
+     * The mechanism is like the integral of the price over the day.
+     * Finally, divide this value with the number of ms in a day (from 6 to 22)
+     *
+     * @param station the station we want to calculate the average
+     * @param date    the date we want to calculate the average
+     */
     public static void computeAveragePriceOfDay(GermanStation station, Date date) {
         double totalPrice = 0.0;
         Double lastPrice = station.lastPrice;
@@ -131,10 +158,15 @@ public class FilterGasPricesDataset implements CommandLineRunner {
             }
         }
         totalPrice += lastPrice * (endTime.getTime() - lastTime.getTime()) / 1000;
-        Double avgPrice = totalPrice / ((22 - 6) * 60 * 60);
+        Double avgPrice = totalPrice / ONE_DAY_6_22;
         station.avgPrices.add(new PriceDatePair(avgPrice, date));
     }
 
+    /**
+     * Write for every german station the avg price for every day of the analysis
+     *
+     * @param germanAveragePriceService
+     */
     public static void writeStationsAndAvgPricesDE(GermanAveragePriceService germanAveragePriceService) {
         String filename = "output/allStationsAndAvgPricesDE.csv";
         String[] columns = new String[]{
@@ -158,6 +190,11 @@ public class FilterGasPricesDataset implements CommandLineRunner {
 
     }
 
+    /**
+     * Read foreign price dataset
+     *
+     * @return a list of price entries
+     */
     public static List<ForeignPriceEntry> readForeignPriceDataset() {
         var file = ClassLoader.getSystemClassLoader().getResource("prices/foreign/foreign_petrol_prices.csv");
         List<ForeignPriceEntry> foreignPriceDataset = Utils.readCSV(file).stream().map(line -> new ForeignPriceEntry(CountryCode.valueOf(line[0]),
@@ -166,6 +203,9 @@ public class FilterGasPricesDataset implements CommandLineRunner {
         return foreignPriceDataset;
     }
 
+    /**
+     * Write for every german station the avg price for every day of the analysis
+     */
     public void writeStationsAndAvgPricesFOREIGN() {
         List<ForeignPriceEntry> foreignPriceDataset = readForeignPriceDataset();
         String filename = "output/allStationsAndAvgPricesFOREIGN.csv";
@@ -203,6 +243,7 @@ public class FilterGasPricesDataset implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication.run(FilterGasPricesDataset.class, args);
     }
+
     @Override
     public void run(String... args) throws Exception {
         germanStations = germanStations();

@@ -9,6 +9,10 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+/**
+ * #AndreasReview
+ * The only usage of this class is inside a not used function ... why exists then?
+ */
 public class AveragePrices {
 
     private OverpassGasStation station;

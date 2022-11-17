@@ -2,6 +2,9 @@ package filteringgasstations.stations;
 
 import filteringgasstations.geolocation.CountryCode;
 
+/**
+ * Pair of stations with corresponding country codes, air distance (utils distance) and driving time/distance (osrm)
+ */
 public class GasStationPair {
     OverpassGasStation firstStation;
     OverpassGasStation secondStation;

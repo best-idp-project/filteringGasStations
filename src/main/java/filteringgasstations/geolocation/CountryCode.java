@@ -1,5 +1,8 @@
 package filteringgasstations.geolocation;
 
+/**
+ * Enum of all country code to simplify the reading / writing of stations
+ */
 public enum CountryCode {
     GER("Germany", "DE"),
     AUT("Austria", "AT"),
