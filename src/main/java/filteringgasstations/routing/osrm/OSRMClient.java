@@ -28,7 +28,7 @@ public class OSRMClient {
      * @return the route that connects the two station
      */
     public static Route getRoute(OSRMCacheService cache, GasStationPair pair) {
-        String uri = pair.getFirstStation().getLongitude() + "," + pair.getFirstStation().getLongitude() + ";"
+        String uri = pair.getFirstStation().getLongitude() + "," + pair.getFirstStation().getLatitude() + ";"
                 + pair.getSecondStation().getLongitude() + "," + pair.getSecondStation().getLatitude();
         Optional<OSRMCache> hit = cache.get(uri);
         if (hit.isPresent()) {

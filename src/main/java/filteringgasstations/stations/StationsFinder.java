@@ -181,6 +181,6 @@ public class StationsFinder {
                 .map(Competitors::fromGasStationPair).toList();
         competitors.stream().filter(p -> !finalIds.contains(p.getId())).parallel().forEach(competitorsService::save);
         ids = new HashSet<>(competitorsService.getIds());
-        Utils.writeCSV("output/allPairsIn" + DIRECT_DISTANCE_LIMIT + "Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
+        Utils.writeCSV("output/allPairsIn" + (int) DIRECT_DISTANCE_LIMIT + "Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
     }
 }
