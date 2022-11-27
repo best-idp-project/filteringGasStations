@@ -2,9 +2,7 @@ package filteringgasstations.database.service;
 
 import com.google.common.collect.ImmutableList;
 import filteringgasstations.database.models.StationOfInterest;
-import filteringgasstations.database.repositories.BorderPointRepository;
 import filteringgasstations.database.repositories.StationOfInterestRepository;
-import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

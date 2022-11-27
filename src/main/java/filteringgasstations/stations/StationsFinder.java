@@ -120,7 +120,7 @@ public class StationsFinder {
                     AtomicInteger countryStations = new AtomicInteger(0);
                     countryGasList.stream().filter(station -> station.getAddress().getCountry() != null).forEach(station -> {
                         Optional<StationOfInterest> ofInterest = savedStations.stream().filter(stationOfInterest -> stationOfInterest.getId().equals(station.getId())).findFirst();
-                        if (ofInterest.isPresent()) {
+                        if (false && ofInterest.isPresent()) {
                             StationOfInterest stationOfInterest = ofInterest.get();
                             if (stationOfInterest.getBorderDistance() < this.BORDER_LIMIT) {
                                 stationsNearBorder.add(station);
@@ -131,7 +131,7 @@ public class StationsFinder {
                                     .map(point -> distance(point.getLatitude(), station.getLatitude(), point.getLongitude(), station.getLongitude()))
                                     .sorted().findFirst();
                             if (match.isPresent()) {
-                                StationOfInterest nearest = new StationOfInterest(station.id, country.getCode(), match.get());
+                                StationOfInterest nearest = new StationOfInterest(station.id, country.getCode(), match.get(), station.getLatitude(), station.getLongitude());
                                 stationOfInterestService.save(nearest);
                                 if (nearest.getBorderDistance() < this.BORDER_LIMIT) {
                                     stationsNearBorder.add(station);
