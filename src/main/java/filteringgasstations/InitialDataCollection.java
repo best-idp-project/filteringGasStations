@@ -5,31 +5,14 @@ import filteringgasstations.database.service.GermanPriceService;
 import filteringgasstations.database.service.OSRMCacheService;
 import filteringgasstations.database.service.StationOfInterestService;
 import filteringgasstations.stations.StationsFinder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class InitialDataCollection implements CommandLineRunner {
+public class InitialDataCollection {
 
     public static final int RANGE_KM = 20; // select the range
     public static final double DIRECT_DISTANCE_LIMIT = 10.;
-    @Autowired
-    private GermanPriceService germanPriceService;
-    @Autowired
-    private OSRMCacheService osrmCacheService;
-    @Autowired
-    private StationOfInterestService stationOfInterestService;
-    @Autowired
-    private CompetitorsService competitorsService;
 
-    public static void main(String[] args) {
-        SpringApplication.run(InitialDataCollection.class, args);
-    }
+    public static void main(OSRMCacheService osrmCacheService, GermanPriceService germanPriceService, CompetitorsService competitorsService, StationOfInterestService stationOfInterestService) {
 
-    @Override
-    public void run(String... args) throws Exception {
         StationsFinder finder = new StationsFinder(osrmCacheService, germanPriceService, competitorsService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         finder.readGermanBorder();
         finder.readAllStations();

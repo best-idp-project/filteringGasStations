@@ -12,13 +12,11 @@ import filteringgasstations.stations.GermanStation;
 import filteringgasstations.utils.PriceDatePair;
 import filteringgasstations.utils.Utils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,19 +24,17 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@SpringBootApplication
-public class AveragePricesComputation implements CommandLineRunner {
+public class AveragePricesComputation {
 
     private static final int ONE_WEEK = 604800000; // how many ms in one week
     private static final int ONE_DAY_6_22 = 57600; // how many sec in a day of anaysis
     static List<GermanStation> germanStations;
-    @Autowired
-    private GermanAveragePriceService germanAveragePriceService;
-    @Autowired
-    private ForeignAveragePriceService foreignAveragePriceService;
 
-    @Autowired
-    private StationOfInterestService stationOfInterestService;
+    private static GermanAveragePriceService germanAveragePriceService;
+
+    private static ForeignAveragePriceService foreignAveragePriceService;
+
+    private static StationOfInterestService stationOfInterestService;
 
     /**
      * Read all german prices entry of the 15 days before the start of the analysis to be sure of having a starting price
@@ -164,8 +160,18 @@ public class AveragePricesComputation implements CommandLineRunner {
         return foreignPriceDataset;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(AveragePricesComputation.class, args);
+    public static void main(GermanAveragePriceService germanAveragePriceService, ForeignAveragePriceService foreignAveragePriceService, StationOfInterestService stationOfInterestService) throws Exception {
+        AveragePricesComputation.germanAveragePriceService = germanAveragePriceService;
+        AveragePricesComputation.foreignAveragePriceService = foreignAveragePriceService;
+        AveragePricesComputation.stationOfInterestService = stationOfInterestService;
+        germanStations = germanStations();
+        // FOR GERMAN STATIONS
+        readPricesSomeDaysBeforeStart();
+        readAllDaysPrices();
+        writeStationsAndAvgPricesDE();
+
+        // FOR FOREIGN STATIONS
+        writeStationsAndAvgPricesFOREIGN();
     }
 
     /**
@@ -173,7 +179,7 @@ public class AveragePricesComputation implements CommandLineRunner {
      *
      * @return a list of german stations
      */
-    public CopyOnWriteArrayList<GermanStation> germanStations() {
+    public static CopyOnWriteArrayList<GermanStation> germanStations() {
         return new CopyOnWriteArrayList<>(stationOfInterestService.getAllByCountry(CountryCode.GER).stream()
                 .filter(stationOfInterest -> stationOfInterest.getBorderDistance() <= 20)
                 .map(station -> new GermanStation(station.getId())).toList());
@@ -182,7 +188,7 @@ public class AveragePricesComputation implements CommandLineRunner {
     /**
      * Write for every german station the avg price for every day of the analysis
      */
-    public void writeStationsAndAvgPricesDE() {
+    public static void writeStationsAndAvgPricesDE() {
         String filename = "output/allStationsAndAvgPricesDE.csv";
         String[] columns = new String[]{
                 "id",
@@ -208,7 +214,7 @@ public class AveragePricesComputation implements CommandLineRunner {
     /**
      * Write for every german station the avg price for every day of the analysis
      */
-    public void writeStationsAndAvgPricesFOREIGN() {
+    public static void writeStationsAndAvgPricesFOREIGN() {
         List<ForeignPriceEntry> foreignPriceDataset = readForeignPriceDataset();
         String filename = "output/allStationsAndAvgPricesFOREIGN.csv";
         String[] columns = new String[]{
@@ -221,6 +227,7 @@ public class AveragePricesComputation implements CommandLineRunner {
         var file = ClassLoader.getSystemClassLoader().getResource("foreignStations20Km.csv");
         final Date start = Date.valueOf("2022-04-15");
         final Date end = Date.valueOf("2022-10-15");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Set<String> ids = new HashSet<>(foreignAveragePriceService.getAllIds());
         Utils.readCSV(file).parallelStream().forEach(line -> {
             for (ForeignPriceEntry entry : foreignPriceDataset) {
@@ -234,22 +241,11 @@ public class AveragePricesComputation implements CommandLineRunner {
                         if (!ids.contains(pr.getId())) {
                             foreignAveragePriceService.save(pr);
                         }
+                        lines.add(line[0] + "," + dateFormat.format(date) + "," + entry.price);
                     }
                 }
             }
         });
         Utils.writeCSV(filename, columns, lines);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        germanStations = germanStations();
-        // FOR GERMAN STATIONS
-        readPricesSomeDaysBeforeStart();
-        readAllDaysPrices();
-        writeStationsAndAvgPricesDE();
-
-        // FOR FOREIGN STATIONS
-        writeStationsAndAvgPricesFOREIGN();
     }
 }

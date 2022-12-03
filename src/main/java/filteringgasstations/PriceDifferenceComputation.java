@@ -6,20 +6,15 @@ import filteringgasstations.comparisons.PriceDifferencePerKmComparison;
 import filteringgasstations.database.models.*;
 import filteringgasstations.database.service.*;
 import filteringgasstations.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-@SpringBootApplication
-public class PriceDifferenceComputation implements CommandLineRunner {
+public class PriceDifferenceComputation {
 
-    private static final List<String> highwayStations = List.of(new String[]{"c2e66726-f71c-491e-91b5-5390e76f374a",
+    private static final List<String> highwayStations = List.of("c2e66726-f71c-491e-91b5-5390e76f374a",
             "df8e1459-867f-460a-bebb-9d7d044c2d58",
             "a13a2fb4-2eeb-47a9-8260-a54f03ff5a84",
             "44531d7a-4f95-49ed-8127-7e010faa126b",
@@ -53,21 +48,16 @@ public class PriceDifferenceComputation implements CommandLineRunner {
             "f2ef6fe5-9589-4b4e-8792-71f8b62f27c7",
             "0662d86f-f85c-4936-9cc3-61753f512d25",
             "a753f452-b7e7-48a2-8f7c-caff93de81d1",
-            "631df570-0876-4d52-82bc-1676d16fb25e"});
-    @Autowired
-    private CompetitorsService competitorsService;
-    @Autowired
-    private GermanAveragePriceService germanAveragePriceService;
-    @Autowired
-    private ForeignAveragePriceService foreignAveragePriceService;
-    @Autowired
-    private StationOfInterestService stationOfInterestService;
-    @Autowired
-    private PriceDifferenceOfCompetitorsService priceDifferenceOfCompetitorsService;
+            "631df570-0876-4d52-82bc-1676d16fb25e");
+    private static CompetitorsService competitorsService;
 
-    public static void main(String[] args) {
-        SpringApplication.run(PriceDifferenceComputation.class, args);
-    }
+    private static GermanAveragePriceService germanAveragePriceService;
+
+    private static ForeignAveragePriceService foreignAveragePriceService;
+
+    private static StationOfInterestService stationOfInterestService;
+
+    private static PriceDifferenceOfCompetitorsService priceDifferenceOfCompetitorsService;
 
     /**
      * Retrieve all station info from the database that are part of a competitor pair
@@ -76,7 +66,7 @@ public class PriceDifferenceComputation implements CommandLineRunner {
      *
      * @return hashmap with ids and info for each station
      */
-    private HashMap<String, StationOfInterest> getAllStations() {
+    private static HashMap<String, StationOfInterest> getAllStations() {
         List<String> stationIds = competitorsService.getAllStations();
         List<StationOfInterest> stationsofinterests = stationOfInterestService.getAll();
         HashMap<String, StationOfInterest> stationsMap = new HashMap<>();
@@ -90,7 +80,7 @@ public class PriceDifferenceComputation implements CommandLineRunner {
      * @param allStations stations retrieved from the db
      * @return the panel set with pairs of competitors and avg prices per day
      */
-    private List<AveragePriceComparison> calculateCompetitorPairsWithAveragePrices(HashMap<String, StationOfInterest> allStations) {
+    private static List<AveragePriceComparison> calculateCompetitorPairsWithAveragePrices(HashMap<String, StationOfInterest> allStations) {
         List<AveragePriceComparison> averagePriceComparisons = new CopyOnWriteArrayList<>();
         //we need to keep track of all the average prices, be it within Germany or foreign
         ConcurrentHashMap<String, List<GermanAveragePrice>> germanPrices = new ConcurrentHashMap<>();
@@ -148,8 +138,12 @@ public class PriceDifferenceComputation implements CommandLineRunner {
         return averagePriceComparisons;
     }
 
-    @Override
-    public void run(String... args) {
+    public  static void main(CompetitorsService competitorsService, GermanAveragePriceService germanAveragePriceService, ForeignAveragePriceService foreignAveragePriceService, StationOfInterestService stationOfInterestService, PriceDifferenceOfCompetitorsService priceDifferenceOfCompetitorsService) {
+        PriceDifferenceComputation.competitorsService = competitorsService;
+        PriceDifferenceComputation.germanAveragePriceService = germanAveragePriceService;
+        PriceDifferenceComputation.foreignAveragePriceService = foreignAveragePriceService;
+        PriceDifferenceComputation.stationOfInterestService = stationOfInterestService;
+        PriceDifferenceComputation.priceDifferenceOfCompetitorsService = priceDifferenceOfCompetitorsService;
         // retrieve all competitors from the db
         HashMap<String, StationOfInterest> allStations = getAllStations();
         // calculate the competitor pairs and their average prices
@@ -181,7 +175,7 @@ public class PriceDifferenceComputation implements CommandLineRunner {
         printDifferencePanelSet(priceDifferencePerKmList);
     }
 
-    private void savePriceDifferencePerKmInDatabase(Set<String> ids, List<PriceDifferencePerKmComparison> priceDifferencePerKmList) {
+    private static void savePriceDifferencePerKmInDatabase(Set<String> ids, List<PriceDifferencePerKmComparison> priceDifferencePerKmList) {
         priceDifferencePerKmList.parallelStream().forEach(priceDifferencePerKm -> {
             StationOfInterest first = priceDifferencePerKm.getFirst();
             StationOfInterest second = priceDifferencePerKm.getSecond();
@@ -213,7 +207,7 @@ public class PriceDifferenceComputation implements CommandLineRunner {
      *
      * @param panelSets the avg price panel set
      */
-    private void printNormalPanelSet(List<AveragePriceComparison> panelSets) {
+    private static void printNormalPanelSet(List<AveragePriceComparison> panelSets) {
         AveragePriceComparison first = panelSets.get(0);
         List<String> columns = new ArrayList<>();
         columns.add("station1");
@@ -234,7 +228,7 @@ public class PriceDifferenceComputation implements CommandLineRunner {
      *
      * @param panelSets the price difference panel set
      */
-    private void printDifferencePanelSet(List<PriceDifferencePerKmComparison> panelSets) {
+    private static void printDifferencePanelSet(List<PriceDifferencePerKmComparison> panelSets) {
         PriceDifferencePerKmComparison first = panelSets.get(0);
         List<String> columns = new ArrayList<>();
         columns.add("station1");
