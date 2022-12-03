@@ -1,9 +1,12 @@
 package filteringgasstations.stations;
 
-import filteringgasstations.App;
+import filteringgasstations.InitialDataCollection;
 import filteringgasstations.database.models.Competitors;
 import filteringgasstations.database.models.StationOfInterest;
-import filteringgasstations.database.service.*;
+import filteringgasstations.database.service.CompetitorsService;
+import filteringgasstations.database.service.GermanPriceService;
+import filteringgasstations.database.service.OSRMCacheService;
+import filteringgasstations.database.service.StationOfInterestService;
 import filteringgasstations.geolocation.BorderPoint;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.routing.Route;
@@ -24,29 +27,20 @@ public class StationsFinder {
     private final CopyOnWriteArrayList<OverpassGasStation> stationsNearBorder = new CopyOnWriteArrayList<>();
     private final double DIRECT_DISTANCE_LIMIT;
     private final double BORDER_LIMIT;
-    private final List<BorderPoint> germanBorder;
+    private List<BorderPoint> germanBorder;
     private OSRMCacheService osrmCacheService;
-    private InputFileService inputFileService;
     private GermanPriceService germanPriceService;
-
-    private BorderPointService borderPointService;
 
     private CompetitorsService competitorsService;
     private HashMap<CountryCode, List<OverpassGasStation>> allStations;
     private List<GasStationPair> pairsInDrivableDistance = new ArrayList<>();
 
-    public StationsFinder(OSRMCacheService osrmCacheService, InputFileService inputFileService, BorderPointService borderPointService, GermanPriceService germanPriceService, CompetitorsService competitorsService, double directDistanceLimit, double borderLimit) {
+    public StationsFinder(OSRMCacheService osrmCacheService, GermanPriceService germanPriceService, CompetitorsService competitorsService, double directDistanceLimit, double borderLimit) {
         this.osrmCacheService = osrmCacheService;
-        this.inputFileService = inputFileService;
         this.germanPriceService = germanPriceService;
         this.DIRECT_DISTANCE_LIMIT = directDistanceLimit;
         this.competitorsService = competitorsService;
         this.BORDER_LIMIT = borderLimit;
-
-        boolean hasChanged = Utils.hasBorderChanged(inputFileService);
-        germanBorder = Utils.readGermanBorder(inputFileService, borderPointService);
-        allStations = Utils.readGasStationsForEachCountry(inputFileService);
-        allStations.put(CountryCode.GER, Utils.readGermanStations());
     }
 
     /**
@@ -74,6 +68,15 @@ public class StationsFinder {
             }
         }
         return pairs;
+    }
+
+    public void readGermanBorder() {
+        germanBorder = Utils.readGermanBorder();
+    }
+
+    public void readAllStations() {
+        allStations = Utils.readGasStationsForEachCountry();
+        allStations.put(CountryCode.GER, Utils.readGermanStations());
     }
 
     /**
@@ -104,7 +107,7 @@ public class StationsFinder {
                 return null;
             }
         }).filter(Objects::nonNull).collect(Collectors.toList());
-        System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <= " + App.DIRECT_DISTANCE_LIMIT + " km");
+        System.out.println("There are " + pairsInDrivableDistance.size() + " pairs with air distance <= " + InitialDataCollection.DIRECT_DISTANCE_LIMIT + " km");
     }
 
     /**
@@ -114,31 +117,13 @@ public class StationsFinder {
      */
     public void writeStationsOfInterestToFile(StationOfInterestService stationOfInterestService) {
         String filename = "output/gasStationsRange".concat(String.valueOf((int) this.BORDER_LIMIT)).concat(".csv");
+        // calculate the distance between each station and the border
         Arrays.stream(CountryCode.values()).forEach(country -> {
                     List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new CopyOnWriteArrayList<>());
                     List<StationOfInterest> savedStations = stationOfInterestService.getAllByCountry(country);
                     AtomicInteger countryStations = new AtomicInteger(0);
                     countryGasList.stream().filter(station -> station.getAddress().getCountry() != null).forEach(station -> {
-                        Optional<StationOfInterest> ofInterest = savedStations.stream().filter(stationOfInterest -> stationOfInterest.getId().equals(station.getId())).findFirst();
-                        if (false && ofInterest.isPresent()) {
-                            StationOfInterest stationOfInterest = ofInterest.get();
-                            if (stationOfInterest.getBorderDistance() < this.BORDER_LIMIT) {
-                                stationsNearBorder.add(station);
-                                countryStations.incrementAndGet();
-                            }
-                        } else {
-                            Optional<Double> match = this.germanBorder.stream()
-                                    .map(point -> distance(point.getLatitude(), station.getLatitude(), point.getLongitude(), station.getLongitude()))
-                                    .sorted().findFirst();
-                            if (match.isPresent()) {
-                                StationOfInterest nearest = new StationOfInterest(station.id, country.getCode(), match.get(), station.getLatitude(), station.getLongitude());
-                                stationOfInterestService.save(nearest);
-                                if (nearest.getBorderDistance() < this.BORDER_LIMIT) {
-                                    stationsNearBorder.add(station);
-                                    countryStations.incrementAndGet();
-                                }
-                            }
-                        }
+                        calculateDistanceStationToBorder(stationOfInterestService, country, savedStations, countryStations, station);
                     });
                     System.out.println(country.getName() + ": " + countryStations.get() + " gas stations inside " + this.BORDER_LIMIT + "km");
                 }
@@ -162,9 +147,41 @@ public class StationsFinder {
     }
 
     /**
+     * calculates the distance of a stiation to the border and saves it to the database
+     *
+     * @param stationOfInterestService
+     * @param country
+     * @param savedStations
+     * @param countryStations
+     * @param station
+     */
+    private void calculateDistanceStationToBorder(StationOfInterestService stationOfInterestService, CountryCode country, List<StationOfInterest> savedStations, AtomicInteger countryStations, OverpassGasStation station) {
+        Optional<StationOfInterest> ofInterest = savedStations.stream().filter(stationOfInterest -> stationOfInterest.getId().equals(station.getId())).findFirst();
+        if (ofInterest.isPresent()) {
+            StationOfInterest stationOfInterest = ofInterest.get();
+            if (stationOfInterest.getBorderDistance() < this.BORDER_LIMIT) {
+                stationsNearBorder.add(station);
+                countryStations.incrementAndGet();
+            }
+        } else {
+            Optional<Double> match = this.germanBorder.stream()
+                    .map(point -> distance(point.getLatitude(), station.getLatitude(), point.getLongitude(), station.getLongitude()))
+                    .sorted().findFirst();
+            if (match.isPresent()) {
+                StationOfInterest nearest = new StationOfInterest(station.id, country.getCode(), match.get(), station.getLatitude(), station.getLongitude());
+                stationOfInterestService.save(nearest);
+                if (nearest.getBorderDistance() < this.BORDER_LIMIT) {
+                    stationsNearBorder.add(station);
+                    countryStations.incrementAndGet();
+                }
+            }
+        }
+    }
+
+    /**
      * Write all pair of stations that have a distance below DIRECT_DISTANCE_LIMIT to file
      */
-    public void writeDrivablePairsToFile() {
+    public void writePairsToFile() {
         String[] columns = new String[]{
                 "idFirstStation",
                 "idSecondStation",
@@ -175,12 +192,11 @@ public class StationsFinder {
                 "drivingTime"
         };
         Set<String> ids = new HashSet<>(competitorsService.getIds());
-        Set<String> finalIds = ids;
         List<Competitors> competitors = pairsInDrivableDistance
                 .stream()
                 .map(Competitors::fromGasStationPair).toList();
-        competitors.stream().filter(p -> !finalIds.contains(p.getId())).parallel().forEach(competitorsService::save);
-        ids = new HashSet<>(competitorsService.getIds());
+        //if it's not saved in the database yet, we also store it
+        competitors.stream().filter(p -> !ids.contains(p.getId())).parallel().forEach(competitorsService::save);
         Utils.writeCSV("output/allPairsIn" + (int) DIRECT_DISTANCE_LIMIT + "Km.csv", columns, pairsInDrivableDistance.stream().map(GasStationPair::toString).sorted().toList());
     }
 }

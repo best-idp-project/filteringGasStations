@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonReader;
 import com.opencsv.CSVReader;
 import filteringgasstations.database.models.GermanPrice;
 import filteringgasstations.database.models.InputFile;
-import filteringgasstations.database.service.BorderPointService;
 import filteringgasstations.database.service.GermanPriceService;
 import filteringgasstations.database.service.InputFileService;
 import filteringgasstations.geolocation.BorderPoint;
@@ -58,11 +57,10 @@ public class Utils {
     /**
      * Helper which reads all gas stations from a file and stores it in a list
      *
-     * @param inputFileService
-     * @param country          country code
+     * @param country country code
      * @return list of gas stations read from the file
      */
-    public static List<OverpassGasStation> readCountryGasStationsJSON(InputFileService inputFileService, CountryCode country) {
+    public static List<OverpassGasStation> readCountryGasStationsJSON(CountryCode country) {
         Type OVERPASS_TYPE = new TypeToken<Overpass>() {
         }.getType();
         var file = ClassLoader.getSystemClassLoader().getResource("json/" + country.getCode() + ".json");
@@ -110,11 +108,9 @@ public class Utils {
     /**
      * Read all points of the german border
      *
-     * @param inputFileService
-     * @param borderPointService
      * @return a list of border points in lat/lon
      */
-    public static List<BorderPoint> readGermanBorder(InputFileService inputFileService, BorderPointService borderPointService) {
+    public static List<BorderPoint> readGermanBorder() {
         List<BorderPoint> points = new ArrayList<>();
         String filename = "borders_germany.json";
 
@@ -122,26 +118,18 @@ public class Utils {
             var file = ClassLoader.getSystemClassLoader().getResource(filename);
             assert file != null;
 
-            if (!hasBorderChanged(inputFileService)) {
-                points = borderPointService.getAll();
-            } else {
-                borderPointService.purge();
-                inputFileService.delete(filename);
+            JsonReader reader = new JsonReader(new FileReader(file.getPath()));
+            Type BORDER_TYPE = new TypeToken<List<List<Double>>>() {
+            }.getType();
+            Gson gson = new Gson();
+            List<List<Double>> parsedPoints = gson.fromJson(reader, BORDER_TYPE);
+            points = parsedPoints.stream().filter(array -> array.size() == 2).parallel().map(array -> {
+                var longitude = array.get(0);
+                var latitude = array.get(1);
+                BorderPoint point = new BorderPoint(latitude, longitude);
+                return point;
+            }).toList();
 
-                JsonReader reader = new JsonReader(new FileReader(file.getPath()));
-                Type BORDER_TYPE = new TypeToken<List<List<Double>>>() {
-                }.getType();
-                Gson gson = new Gson();
-                List<List<Double>> parsedPoints = gson.fromJson(reader, BORDER_TYPE);
-                points = parsedPoints.stream().filter(array -> array.size() == 2).parallel().map(array -> {
-                    var longitude = array.get(0);
-                    var latitude = array.get(1);
-                    BorderPoint point = new BorderPoint(latitude, longitude);
-                    borderPointService.save(point);
-                    return point;
-                }).toList();
-                inputFileService.save(new InputFile(filename, InputFile.getChecksum(filename).get()));
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,13 +143,13 @@ public class Utils {
      * @param inputFileService
      * @return hashmap with list of station for every country
      */
-    public static HashMap<CountryCode, List<OverpassGasStation>> readGasStationsForEachCountry(InputFileService inputFileService) {
+    public static HashMap<CountryCode, List<OverpassGasStation>> readGasStationsForEachCountry() {
         HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
         for (CountryCode countryCode : CountryCode.values()) {
             if (countryCode == CountryCode.GER) {
                 continue;
             }
-            List<OverpassGasStation> stations = Utils.readCountryGasStationsJSON(inputFileService, countryCode).stream().toList();
+            List<OverpassGasStation> stations = Utils.readCountryGasStationsJSON(countryCode).stream().toList();
             stations.forEach(station -> station.addImportantFields(countryCode));
 
             allStations.put(countryCode, stations);

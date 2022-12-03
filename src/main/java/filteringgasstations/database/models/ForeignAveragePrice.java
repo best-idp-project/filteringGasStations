@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Entity(name = "foreign_average_prices")
 @Table(indexes = {@Index(name = "foreign_average_station_index", columnList = "station")})
-public class ForeignAveragePrice {
+public class ForeignAveragePrice extends AveragePrice {
 
     private String id;
 

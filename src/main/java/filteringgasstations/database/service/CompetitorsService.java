@@ -23,4 +23,16 @@ public class CompetitorsService {
     public List<String> getIds() {
         return repository.getIds();
     }
+
+    public List<String> getAllStations() {
+        return repository.getAllStations();
+    }
+
+    public List<String> getAllCompetitorsOfStation(String station) {
+        return repository.getAllCompetitorsOfStation(station);
+    }
+
+    public Competitors findByFirstStationAndSecondStation(String firstStation, String secondStation) {
+        return repository.findByFirstStationAndSecondStation(firstStation, secondStation);
+    }
 }
