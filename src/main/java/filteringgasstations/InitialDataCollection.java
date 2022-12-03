@@ -13,20 +13,21 @@ public class InitialDataCollection {
 
     public static void main(OSRMCacheService osrmCacheService, GermanPriceService germanPriceService, CompetitorsService competitorsService, StationOfInterestService stationOfInterestService) {
 
-        StationsFinder finder = new StationsFinder(osrmCacheService, germanPriceService, competitorsService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
+        StationsFinder finder = new StationsFinder(osrmCacheService, competitorsService, DIRECT_DISTANCE_LIMIT, RANGE_KM);
         finder.readGermanBorder();
         finder.readAllStations();
         // For every country, check for every gas station the distance to all points of the german border
         System.out.println();
-        System.out.println("Stations inside range of " + RANGE_KM + "km");
+        System.out.println("STATIONS IN A RANGE OF " + RANGE_KM + "KM FROM THE BORDER:");
         finder.writeStationsOfInterestToFile(stationOfInterestService);
 
         System.out.println();
-        System.out.println("Calculating distances between stations");
+        System.out.println("CALCULATING DISTANCES BETWEEN STATIONS:");
         // Calculate all possible pairs and for each calculate the driving time and distance
         finder.calculateDistancesBetweenStations();
 
-        System.out.println("Write valid pairs");
+        System.out.println();
+        System.out.println("Writing valid pairs to file ... ");
         // Write all valid pairs to file
         finder.writePairsToFile();
     }

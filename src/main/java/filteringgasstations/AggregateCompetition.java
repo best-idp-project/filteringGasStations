@@ -14,6 +14,11 @@ public class AggregateCompetition {
     private static final double COMPETITION_VALUE = 0.02;   // this means 2 cent/km
     private static final HashMap<String, Integer[]> stationCompetitorsPerDay = new HashMap<>();
 
+    public static void main() {
+        String[] header = readDifferenceCsv();
+        printAggregatedCompetitors(header);
+    }
+
     /**
      * Read the difference.csv file.
      */
@@ -68,6 +73,9 @@ public class AggregateCompetition {
     private static void printAggregatedCompetitors(String[] header) {
         header = fixHeader(header);
         Utils.writeCSV("output/aggregatedCompetition" + COMPETITION_VALUE + ".csv", header, competitionToListOfString());
+
+        System.out.println();
+        System.out.println("Writing aggregated competition - DONE");
     }
 
     /**
@@ -104,11 +112,6 @@ public class AggregateCompetition {
             ex.printStackTrace();
         }
         return null;
-    }
-
-    public void run() {
-        String[] header = readDifferenceCsv();
-        printAggregatedCompetitors(header);
     }
 
 }

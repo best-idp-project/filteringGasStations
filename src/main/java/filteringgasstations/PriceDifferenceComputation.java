@@ -138,7 +138,7 @@ public class PriceDifferenceComputation {
         return averagePriceComparisons;
     }
 
-    public  static void main(CompetitorsService competitorsService, GermanAveragePriceService germanAveragePriceService, ForeignAveragePriceService foreignAveragePriceService, StationOfInterestService stationOfInterestService, PriceDifferenceOfCompetitorsService priceDifferenceOfCompetitorsService) {
+    public static void main(CompetitorsService competitorsService, GermanAveragePriceService germanAveragePriceService, ForeignAveragePriceService foreignAveragePriceService, StationOfInterestService stationOfInterestService, PriceDifferenceOfCompetitorsService priceDifferenceOfCompetitorsService) {
         PriceDifferenceComputation.competitorsService = competitorsService;
         PriceDifferenceComputation.germanAveragePriceService = germanAveragePriceService;
         PriceDifferenceComputation.foreignAveragePriceService = foreignAveragePriceService;
@@ -167,7 +167,7 @@ public class PriceDifferenceComputation {
                 .filter(p -> p.getDistance() > 1)
                 .filter(p -> !highwayStations.contains(p.getFirst().getId()))
                 .filter(p -> !highwayStations.contains(p.getSecond().getId()))
-                .filter(p -> p.getDifferences().get(0) != null)
+                .filter(p -> p.getDifferences().get(0).getPriceDifference() != null)
                 .filter(p -> p.getDistance() < 25000 /*only keep competitors within 25km*/)
                 .toList();
 
@@ -221,6 +221,8 @@ public class PriceDifferenceComputation {
             columns.add("second_" + date);
         }
         Utils.writeCSV("output/averagePriceComparison.csv", columns.toArray(new String[]{}), panelSets.stream().map(AveragePriceComparison::toString).collect(Collectors.toList()));
+        System.out.println();
+        System.out.println("Writing average price for all pairs - DONE");
     }
 
     /**
@@ -241,5 +243,7 @@ public class PriceDifferenceComputation {
             columns.add(date);
         }
         Utils.writeCSV("output/difference.csv", columns.toArray(new String[]{}), panelSets.stream().map(PriceDifferencePerKmComparison::toString).collect(Collectors.toList()));
+        System.out.println();
+        System.out.println("Writing price differences for all pairs - DONE");
     }
 }

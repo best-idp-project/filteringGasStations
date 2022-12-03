@@ -81,7 +81,7 @@ public class Utils {
     /**
      * Check if the border file changed
      *
-     * @param inputFileService
+     * @param inputFileService cached files
      * @return true if changed, false otherwise
      */
     public static boolean hasBorderChanged(InputFileService inputFileService) {
@@ -92,7 +92,7 @@ public class Utils {
     /**
      * Check if a file has changed compared to the cached version
      *
-     * @param inputFileService
+     * @param inputFileService cached input files
      * @param filename         name of the file
      * @return true if changed, false otherwise
      */
@@ -114,6 +114,9 @@ public class Utils {
         List<BorderPoint> points = new ArrayList<>();
         String filename = "borders_germany.json";
 
+        System.out.println();
+        System.out.println("READING GERMAN BORDER POINTS");
+
         try {
             var file = ClassLoader.getSystemClassLoader().getResource(filename);
             assert file != null;
@@ -126,13 +129,13 @@ public class Utils {
             points = parsedPoints.stream().filter(array -> array.size() == 2).parallel().map(array -> {
                 var longitude = array.get(0);
                 var latitude = array.get(1);
-                BorderPoint point = new BorderPoint(latitude, longitude);
-                return point;
+                return new BorderPoint(latitude, longitude);
             }).toList();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         System.out.println("German Borders has " + points.size() + " points\n");
         return points;
     }
@@ -140,11 +143,11 @@ public class Utils {
     /**
      * Read gas stations for all countries (except DE), store everything in a hashmap
      *
-     * @param inputFileService
      * @return hashmap with list of station for every country
      */
     public static HashMap<CountryCode, List<OverpassGasStation>> readGasStationsForEachCountry() {
         HashMap<CountryCode, List<OverpassGasStation>> allStations = new HashMap<>();
+        System.out.println("READING ALL GAS STATIONS FOR EACH COUNTRY");
         for (CountryCode countryCode : CountryCode.values()) {
             if (countryCode == CountryCode.GER) {
                 continue;
@@ -162,7 +165,7 @@ public class Utils {
     /**
      * Separate read for german stations (different source)
      *
-     * @return
+     * @return list of stations
      */
     public static List<OverpassGasStation> readGermanStations() {
         List<OverpassGasStation> germanStations = new ArrayList<>();
@@ -227,9 +230,9 @@ public class Utils {
     }
 
     /**
-     * Create directory in the project with a certain name
+     * Create directory in the project
      *
-     * @param name
+     * @param name the name of the directory
      */
     public static void createDirectory(String name) {
         try {

@@ -53,11 +53,12 @@ public class AveragePricesComputation {
                 }
             });
         }
-        System.out.println("Prices of the 15 days before start OK");
+        System.out.println();
+        System.out.println("Reading prices of the 15 days before start - DONE");
     }
 
     /**
-     * Read all price entries for all the days of the analysis (between April 15 and October 15)
+     * Read all GERMAN price entries for all the days of the analysis (between April 15 and October 15)
      * and store for every station the corresponding entries.
      * At the end of every day call the endDayProcedure to calculate the avg price
      */
@@ -92,6 +93,8 @@ public class AveragePricesComputation {
             }
         });
 
+        System.out.println();
+        System.out.println("Reading german prices and computing avg - DONE");
     }
 
     /**
@@ -156,7 +159,8 @@ public class AveragePricesComputation {
         var file = ClassLoader.getSystemClassLoader().getResource("prices/foreign/foreign_petrol_prices.csv");
         List<ForeignPriceEntry> foreignPriceDataset = Utils.readCSV(file).stream().map(line -> new ForeignPriceEntry(CountryCode.valueOf(line[0]),
                 Date.valueOf(line[1]), Double.parseDouble(line[2]))).toList();
-        System.out.println("Foreign price dataset OK");
+        System.out.println();
+        System.out.println("Reading foreign prices and computing avg - DONE");
         return foreignPriceDataset;
     }
 
@@ -165,6 +169,7 @@ public class AveragePricesComputation {
         AveragePricesComputation.foreignAveragePriceService = foreignAveragePriceService;
         AveragePricesComputation.stationOfInterestService = stationOfInterestService;
         germanStations = germanStations();
+
         // FOR GERMAN STATIONS
         readPricesSomeDaysBeforeStart();
         readAllDaysPrices();
@@ -207,7 +212,8 @@ public class AveragePricesComputation {
                             lines.add(germanStation.id + "," + priceDatePair.date + "," + priceDatePair.avgPrice);
                         }));
         Utils.writeCSV(filename, columns, lines);
-        System.out.println("All stations and avg prices for DE done");
+        System.out.println();
+        System.out.println("Writing DE stations and avg prices - DONE");
 
     }
 
@@ -247,5 +253,7 @@ public class AveragePricesComputation {
             }
         });
         Utils.writeCSV(filename, columns, lines);
+        System.out.println();
+        System.out.println("Writing FOREIGN stations and avg prices - DONE");
     }
 }

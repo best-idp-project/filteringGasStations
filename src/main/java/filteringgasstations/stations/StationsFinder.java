@@ -28,16 +28,14 @@ public class StationsFinder {
     private final double DIRECT_DISTANCE_LIMIT;
     private final double BORDER_LIMIT;
     private List<BorderPoint> germanBorder;
-    private OSRMCacheService osrmCacheService;
-    private GermanPriceService germanPriceService;
+    private final OSRMCacheService osrmCacheService;
 
-    private CompetitorsService competitorsService;
+    private final CompetitorsService competitorsService;
     private HashMap<CountryCode, List<OverpassGasStation>> allStations;
     private List<GasStationPair> pairsInDrivableDistance = new ArrayList<>();
 
-    public StationsFinder(OSRMCacheService osrmCacheService, GermanPriceService germanPriceService, CompetitorsService competitorsService, double directDistanceLimit, double borderLimit) {
+    public StationsFinder(OSRMCacheService osrmCacheService, CompetitorsService competitorsService, double directDistanceLimit, double borderLimit) {
         this.osrmCacheService = osrmCacheService;
-        this.germanPriceService = germanPriceService;
         this.DIRECT_DISTANCE_LIMIT = directDistanceLimit;
         this.competitorsService = competitorsService;
         this.BORDER_LIMIT = borderLimit;
@@ -122,9 +120,7 @@ public class StationsFinder {
                     List<OverpassGasStation> countryGasList = allStations.getOrDefault(country, new CopyOnWriteArrayList<>());
                     List<StationOfInterest> savedStations = stationOfInterestService.getAllByCountry(country);
                     AtomicInteger countryStations = new AtomicInteger(0);
-                    countryGasList.stream().filter(station -> station.getAddress().getCountry() != null).forEach(station -> {
-                        calculateDistanceStationToBorder(stationOfInterestService, country, savedStations, countryStations, station);
-                    });
+                    countryGasList.stream().filter(station -> station.getAddress().getCountry() != null).forEach(station -> calculateDistanceStationToBorder(stationOfInterestService, country, savedStations, countryStations, station));
                     System.out.println(country.getName() + ": " + countryStations.get() + " gas stations inside " + this.BORDER_LIMIT + "km");
                 }
         );
@@ -147,13 +143,7 @@ public class StationsFinder {
     }
 
     /**
-     * calculates the distance of a stiation to the border and saves it to the database
-     *
-     * @param stationOfInterestService
-     * @param country
-     * @param savedStations
-     * @param countryStations
-     * @param station
+     * Calculates the distance of a station to the border and saves it to the database
      */
     private void calculateDistanceStationToBorder(StationOfInterestService stationOfInterestService, CountryCode country, List<StationOfInterest> savedStations, AtomicInteger countryStations, OverpassGasStation station) {
         Optional<StationOfInterest> ofInterest = savedStations.stream().filter(stationOfInterest -> stationOfInterest.getId().equals(station.getId())).findFirst();

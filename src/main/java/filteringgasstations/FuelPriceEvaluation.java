@@ -33,8 +33,7 @@ public class FuelPriceEvaluation implements CommandLineRunner {
         InitialDataCollection.main(osrmCacheService, germanPriceService, competitorsService, stationOfInterestService);
         AveragePricesComputation.main(germanAveragePriceService, foreignAveragePriceService, stationOfInterestService);
         PriceDifferenceComputation.main(competitorsService, germanAveragePriceService, foreignAveragePriceService, stationOfInterestService, priceDifferenceOfCompetitorsService);
-        AggregateCompetition aggregateCompetition = new AggregateCompetition();
-        aggregateCompetition.run();
+        AggregateCompetition.main();
         System.exit(0);
     }
 }

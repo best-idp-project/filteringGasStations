@@ -56,29 +56,4 @@ public class PriceDifferencePerKmComparison extends CompetitorComparison {
     public List<PriceDifference> getDifferences() {
         return differences;
     }
-
-    /*public List<Comparison> toDatabaseComparison() {
-        List<Comparison> comparisons = new ArrayList<>();
-        for (int i = 0; i < getDifferences().size(); i++) {
-            Date date = getFirstStationPrices().get(i).getDate();
-            StationOfInterest first = getFirst();
-            StationOfInterest second = getSecond();
-            Double differencePerKM = getDifferences().get(i);
-            Comparison comparison = new Comparison(
-                    first.getId(),
-                    first.getCountry(),
-                    second.getId(),
-                    second.getCountry(),
-                    getDistance(),
-                    null,
-                    null,
-                    differencePerKM,
-                    date,
-                    ComparisonType.PRICE_DIFFERENCE_PER_KM);
-            comparisons.add(comparison);
-        }
-        return comparisons;
-    }
-
-     */
 }
