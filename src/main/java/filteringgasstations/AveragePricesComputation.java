@@ -8,6 +8,8 @@ import filteringgasstations.database.service.GermanAveragePriceService;
 import filteringgasstations.database.service.StationOfInterestService;
 import filteringgasstations.geolocation.CountryCode;
 import filteringgasstations.stations.ForeignPriceEntry;
+import filteringgasstations.stations.GasStation;
+import filteringgasstations.stations.GasStationAddress;
 import filteringgasstations.stations.GermanStation;
 import filteringgasstations.utils.PriceDatePair;
 import filteringgasstations.utils.Utils;
@@ -17,10 +19,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -191,6 +190,20 @@ public class AveragePricesComputation {
     }
 
     /**
+     * Read all foreign stations within 20 km from the border from the database
+     *
+     * @return a list of foreign stations
+     */
+    public static CopyOnWriteArrayList<GasStation> foreignStations() {
+        return new CopyOnWriteArrayList<>(stationOfInterestService.getAll().stream()
+                .filter(stationOfInterest -> stationOfInterest.getBorderDistance() <= 20)
+                .filter(stationOfInterest -> !Objects.equals(stationOfInterest.getCountry(), "DE"))
+                .map(station -> new GasStation(station.getId(), station.getLatitude(), station.getLongitude(),
+                        new GasStationAddress(CountryCode.findByCode(station.getCountry())))).toList());
+    }
+
+
+    /**
      * Write for every german station the avg price for every day of the analysis
      */
     public static void writeStationsAndAvgPricesDE() {
@@ -229,25 +242,24 @@ public class AveragePricesComputation {
                 "avgPrice"
         };
         List<String> lines = new ArrayList<>();
-        // for every station in the foreignStations20Km.csv
-        var file = ClassLoader.getSystemClassLoader().getResource("foreignStations20Km.csv");
+        // for every foreign station < 20 km from the border
         final Date start = Date.valueOf("2022-04-15");
         final Date end = Date.valueOf("2022-10-15");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Set<String> ids = new HashSet<>(foreignAveragePriceService.getAllIds());
-        Utils.readCSV(file).parallelStream().forEach(line -> {
+        foreignStations().forEach(station -> {
             for (ForeignPriceEntry entry : foreignPriceDataset) {
                 // find the first entry in foreign_petrol_prices.csv with same country code
-                if (entry.countryCode == CountryCode.valueOf(line[1])) {
+                if (entry.countryCode == station.getAddress().getCountry()) {
                     // 604 800 000 is one week in ms
                     for (java.util.Date date = entry.date; date.before(new Date(entry.date.getTime() + ONE_WEEK)); date = DateUtils.addDays(date, 1)) {
                         if (date.before(start) || date.after(end))
                             continue;
-                        ForeignAveragePrice pr = new ForeignAveragePrice(line[0], date, entry.price);
+                        ForeignAveragePrice pr = new ForeignAveragePrice(station.getId(), date, entry.price);
                         if (!ids.contains(pr.getId())) {
                             foreignAveragePriceService.save(pr);
                         }
-                        lines.add(line[0] + "," + dateFormat.format(date) + "," + entry.price);
+                        lines.add(station.getId() + "," + dateFormat.format(date) + "," + entry.price);
                     }
                 }
             }

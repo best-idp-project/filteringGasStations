@@ -1,5 +1,7 @@
 package filteringgasstations.geolocation;
 
+import filteringgasstations.stations.GasStationAddress;
+
 /**
  * Enum of all country code to simplify the reading / writing of stations
  */
@@ -27,6 +29,15 @@ public enum CountryCode {
     CountryCode(String name, String code) {
         this.name = name;
         this.code = code;
+    }
+
+    public static CountryCode findByCode(String code) {
+        for (CountryCode v : values()) {
+            if (v.code.equals(code)) {
+                return v;
+            }
+        }
+        return null;
     }
 
     @Override
