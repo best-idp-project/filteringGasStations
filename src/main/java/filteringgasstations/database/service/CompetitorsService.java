@@ -2,6 +2,7 @@ package filteringgasstations.database.service;
 
 import filteringgasstations.database.models.Competitors;
 import filteringgasstations.database.repositories.CompetitorsRepository;
+import filteringgasstations.geolocation.CountryCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,9 @@ public class CompetitorsService {
 
     public Competitors findByFirstStationAndSecondStation(String firstStation, String secondStation) {
         return repository.findByFirstStationAndSecondStation(firstStation, secondStation);
+    }
+
+    public List<String> getGermanCompetitorsOfCountry(CountryCode countryCode) {
+        return repository.getAllGermanCompetitorsOfCountry(countryCode.getCode());
     }
 }

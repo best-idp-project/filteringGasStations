@@ -18,4 +18,7 @@ public interface CompetitorsRepository extends CrudRepository<Competitors, Strin
     List<String> getAllCompetitorsOfStation(String station);
 
     Competitors findByFirstStationAndSecondStation(String firstStation, String secondStation);
+
+    @Query(value = "select distinct(id) from (select distinct c.first_station as id from competitors c where c.country_first = 'DE' and c.country_second = ?1 union distinct select c.second_station as id from competitors c where c.country_second = 'DE' and c.country_first = ?1) as view", nativeQuery = true)
+    List<String> getAllGermanCompetitorsOfCountry(String country);
 }
