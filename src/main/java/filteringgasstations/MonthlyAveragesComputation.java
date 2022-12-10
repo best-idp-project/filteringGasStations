@@ -26,46 +26,13 @@ public class MonthlyAveragesComputation {
         MonthlyAveragesComputation.foreignAveragePriceService = foreignAveragePriceService;
         MonthlyAveragesComputation.stationOfInterestService = stationOfInterestService;
         MonthlyAveragesComputation.competitorsService = competitorsService;
-
+        System.out.println("Computing the border average ...");
         calculateBorderAverage();
     }
 
-    public static void calculateNationalAverages() {
-        List<StationOfInterest> stationOfInterests = stationOfInterestService.getAll();
-        Map<CountryCode, List<StationOfInterest>> stationOfInterestsMap = new HashMap<>();
-        for (StationOfInterest stationOfInterest : stationOfInterests) {
-            CountryCode countryCode = CountryCode.findByCode(stationOfInterest.getCountry());
-            if (!stationOfInterestsMap.containsKey(countryCode)) {
-                stationOfInterestsMap.put(countryCode, new ArrayList<>());
-            }
-            if (!stationOfInterestsMap.get(countryCode).stream().filter(f -> f.getId().equals(stationOfInterest)).findFirst().isPresent()) {
-                stationOfInterestsMap.get(countryCode).add(stationOfInterest);
-            }
-        }
-        for (CountryCode countryCode : stationOfInterestsMap.keySet()) {
-            System.out.println(countryCode + ": " + stationOfInterestsMap.get(countryCode).size());
-            for (int i = 4; i <= 10; i++) {
-                List<Double> averagePrices = new ArrayList<>();
-                String month = i < 10 ? "0" + i : "" + i;
-                for (StationOfInterest stationOfInterest : stationOfInterestsMap.get(countryCode)) {
-                    if (countryCode == CountryCode.GER) {
-                        Double price = germanAveragePriceService.getAveragePriceByStationAndMonth(stationOfInterest.getId(), month);
-                        if (price != null) {
-                            averagePrices.add(price);
-                        }
-                    } else {
-                        Double price = foreignAveragePriceService.getAveragePriceByStationAndMonth(stationOfInterest.getId(), month);
-                        if (price != null) {
-                            averagePrices.add(price);
-                        }
-                    }
-                }
-                double averagePrice = averagePrices.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-                System.out.println(countryCode + ": " + stationOfInterestsMap.get(countryCode).size() + " month: " + month + " average: " + averagePrice);
-            }
-        }
-    }
-
+    /**
+     * Compute avg price per month considering all german stations near each foreign country border
+     */
     public static void calculateBorderAverage() {
         List<String> lines = new ArrayList<>();
         for (CountryCode countryCode : Arrays.stream(CountryCode.values()).filter(f -> f != CountryCode.GER).toArray(CountryCode[]::new)) {
