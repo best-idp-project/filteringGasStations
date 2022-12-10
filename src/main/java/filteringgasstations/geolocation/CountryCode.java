@@ -1,5 +1,7 @@
 package filteringgasstations.geolocation;
 
+import filteringgasstations.stations.GasStationAddress;
+
 /**
  * Enum of all country code to simplify the reading / writing of stations
  */
