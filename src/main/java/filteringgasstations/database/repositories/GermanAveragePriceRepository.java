@@ -16,4 +16,7 @@ public interface GermanAveragePriceRepository extends CrudRepository<GermanAvera
 
     @Query(value = "select id from german_average_prices")
     List<String> getIds();
+
+    @Query(value = "select avg(average) from german_average_prices where station = ?1 and TO_CHAR(DATE(date), 'MM') = ?2")
+    Double getAveragePriceByStationAndMonth(String station, String month);
 }

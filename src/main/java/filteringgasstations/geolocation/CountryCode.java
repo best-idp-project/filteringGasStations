@@ -29,6 +29,15 @@ public enum CountryCode {
         this.code = code;
     }
 
+    public static CountryCode findByCode(String code) {
+        for (CountryCode v : values()) {
+            if (v.code.equals(code)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return code;

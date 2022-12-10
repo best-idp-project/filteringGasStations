@@ -38,4 +38,8 @@ public class GermanAveragePriceService {
     }
 
     public List<String> getAllIds() { return repository.getIds(); }
+
+    public Double getAveragePriceByStationAndMonth(String station, String month) {
+        return repository.getAveragePriceByStationAndMonth(station, month);
+    }
 }

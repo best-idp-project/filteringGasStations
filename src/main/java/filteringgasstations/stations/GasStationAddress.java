@@ -24,6 +24,11 @@ public class GasStationAddress {
         this.name = name;
     }
 
+    public GasStationAddress(CountryCode country) {
+        this.country = country;
+    }
+
+
     public CountryCode getCountry() {
         return country;
     }
