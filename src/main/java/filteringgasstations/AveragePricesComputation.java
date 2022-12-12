@@ -142,6 +142,8 @@ public class AveragePricesComputation {
                 totalPrice += lastPrice * (station.timestamps.get(i).getTime() - lastTime.getTime()) / 1000;
                 lastPrice = station.prices.get(i);
                 lastTime = station.timestamps.get(i);
+            } else {
+                lastPrice = station.prices.get(i);
             }
         }
         totalPrice += lastPrice * (endTime.getTime() - lastTime.getTime()) / 1000;
@@ -169,12 +171,14 @@ public class AveragePricesComputation {
         AveragePricesComputation.stationOfInterestService = stationOfInterestService;
         germanStations = germanStations();
 
-        // FOR GERMAN STATIONS
+        // Read all price entries for German stations of the fifteen days before the analysis
         readPricesSomeDaysBeforeStart();
+        // For every day of the analysis read all price entries of the German stations
+        // compute the average price per day per station
         readAllDaysPrices();
+        // Write all stations id and their avg price for every day
         writeStationsAndAvgPricesDE();
-
-        // FOR FOREIGN STATIONS
+        // Read foreign price entries, write stations ids and their avg price for every day
         writeStationsAndAvgPricesFOREIGN();
     }
 
