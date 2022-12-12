@@ -3,7 +3,7 @@ spring:
     username: idp_andreas
     password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://baey.eu/idp
+    url: jdbc:postgresql://localhost/idp
   jpa:
     hibernate:
       ddl-auto: update
