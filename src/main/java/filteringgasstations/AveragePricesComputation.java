@@ -111,8 +111,6 @@ public class AveragePricesComputation {
                 return;
             }
             computeAveragePriceOfDay(station, date);
-            // set last price for the following day
-            station.setLastPrice(station.prices.get(station.prices.size() - 1));
             // clear the price and timestamps arrays
             station.prices.clear();
             station.timestamps.clear();
