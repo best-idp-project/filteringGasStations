@@ -143,7 +143,7 @@ public class AveragePricesComputation {
                 lastPrice = station.prices.get(i);
                 lastTime = station.timestamps.get(i);
             } else {
-                lastPrice = station.prices.get(i);
+                station.setLastPrice(station.prices.get(i));
             }
         }
         totalPrice += lastPrice * (endTime.getTime() - lastTime.getTime()) / 1000;
